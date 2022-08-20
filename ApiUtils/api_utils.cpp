@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-20 18:40:11
+ * @LastEditTime : 2022-08-20 18:49:21
  */
 #include "api_utils.h"
 
@@ -19,7 +19,9 @@ int ApiUtils::onLogin(uint32_t _id, QString _pwd) {
     qDebug() << "ApiUtils::"
              << "onLogin";
     uint32_t guid = getGUID("login");
-    Pak_Login* pak = new Pak_Login(guid, _id, _pwd.toLocal8Bit().data());
+
+    QString _pwd_md5 = QCryptographicHash::hash(_pwd.toLatin1(), QCryptographicHash::Md5).toHex().right(16);
+    Pak_Login* pak = new Pak_Login(guid, _id, _pwd_md5.toLocal8Bit().data());
     QByteArray* data = new QByteArray((char*)pak, sizeof(*pak));
 
     socketUtils->sendData(*data);
@@ -31,7 +33,9 @@ int ApiUtils::onRegister(uint32_t _id, QString _pwd, QString _nickname, uint8_t 
     qDebug() << "ApiUtils::"
              << "onRegister";
     uint32_t guid = getGUID("register");
-    Pak_Register* pak = new Pak_Register(guid, _id, _pwd.toLocal8Bit().data(), _nickname.toLocal8Bit().data(), _gender, _age, _city, _job);
+
+    QString _pwd_md5 = QCryptographicHash::hash(_pwd.toLatin1(), QCryptographicHash::Md5).toHex().right(16);
+    Pak_Register* pak = new Pak_Register(guid, _id, _pwd_md5.toLocal8Bit().data(), _nickname.toLocal8Bit().data(), _gender, _age, _city, _job);
     QByteArray* data = new QByteArray((char*)pak, sizeof(*pak));
 
     socketUtils->sendData(*data);
