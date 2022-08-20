@@ -1,0 +1,23 @@
+{
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#283112",
+        "titleBar.activeBackground": "#384519",
+        "titleBar.activeForeground": "#F9FBF4"
+    },
+    "files.associations": {
+        "qtcpsocket": "cpp",
+        "ostream": "cpp",
+        "qdebug": "cpp",
+        "qobject": "cpp",
+        "cstddef": "cpp",
+        "locale": "cpp",
+        "xlocale": "cpp",
+        "xlocmes": "cpp",
+        "xlocmon": "cpp",
+        "xlocnum": "cpp",
+        "xloctime": "cpp",
+        "xstring": "cpp",
+        "xutility": "cpp",
+        "qcryptographichash": "cpp"
+    }
+}
