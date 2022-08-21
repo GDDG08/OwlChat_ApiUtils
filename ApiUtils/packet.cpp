@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:52:10
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-21 01:28:18
+ * @LastEditTime : 2022-08-22 01:40:04
  */
 #include "packet.h"
 
@@ -28,10 +28,32 @@ Pak_Message::Pak_Message(uint32_t _userID, uint32_t _sessionID, uint64_t _time, 
     : userID(_userID), sessionID(_sessionID), time(_time), msg_type(_msg_type), msg_len(_msg_len) {
     this->content = (char*)malloc(sizeof(char) * _msg_len);
     strcpy(this->content, _content.toLocal8Bit().data());
-    this->len = PACKET_SIZE(this) - sizeof(char*) + sizeof(char)*_msg_len;
+    this->len = PACKET_SIZE(this) - sizeof(char*) + sizeof(char) * _msg_len;
     this->type = PACKET_TYPE::SEND_MESSAGE;
 };
 
 Pak_Message::~Pak_Message() {
     free(this->content);
 };
+
+Pak_Basic::Pak_Basic(uint32_t _userID, PACKET_TYPE pak_type)
+    : userID(_userID) {
+    this->len = PACKET_SIZE(this);
+    this->type = pak_type;
+}
+
+Pak_FriendBasic::Pak_FriendBasic(uint32_t _userID_my, uint32_t _userID_client, PACKET_TYPE pak_type)
+    : Pak_Basic(_userID_my, pak_type), userID_client(_userID_client) {
+    this->len = PACKET_SIZE(this);
+}
+
+Pak_FriendAdd::Pak_FriendAdd(uint32_t _userID_my, uint32_t _userID_client, QString _verify_msg)
+    : Pak_FriendBasic(_userID_my, _userID_client, PACKET_TYPE::FRIEND_ADD) {
+    memcpy(this->verify_msg, _verify_msg.toLocal8Bit().data(),sizeof(this->verify_msg));
+    this->len = PACKET_SIZE(this);
+}
+
+Pak_FriendAccept::Pak_FriendAccept(uint32_t _userID_my, uint32_t _userID_client, uint8_t _isAccepted)
+    : Pak_FriendBasic(_userID_my, _userID_client, PACKET_TYPE::FRIEND_ACCEPT), isAccepted(_isAccepted) {
+    this->len = PACKET_SIZE(this);
+}

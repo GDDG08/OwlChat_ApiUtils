@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:52:10
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-20 23:42:34
+ * @LastEditTime : 2022-08-22 00:21:37
  */
 #ifndef PACKAGE_H
 #define PACKAGE_H
@@ -22,7 +22,12 @@ enum PACKET_TYPE {
     LOGIN = 1u,
     REGISTER,
     SEND_MESSAGE,
-    RECV_MESSAGE
+    RECV_MESSAGE,
+    FRIEND_LIST,
+    FRIEND_ADD,
+    FRIEND_DELETE,
+    FRIEND_ACCEPT,
+    FRIEND_REQUEST
 };
 class Packet {
    public:
@@ -77,9 +82,48 @@ class Pak_Message : public Packet {
     ~Pak_Message();
 };
 
+class Pak_Basic : public Packet {
+   public:
+    uint32_t userID;
+
+    Pak_Basic(uint32_t _userID, PACKET_TYPE pak_type);
+};
+
 class Pak_LoginRTN : public PacketRTN {
    public:
     char token[17];
 };
 
+class Pak_BasicArrayRTN : public PacketRTN {
+   public:
+    uint16_t list_len;
+    char* start_ptr;
+};
+
+struct Pak_FriendBasicInfo {
+    uint32_t userID;
+    char nickName[128];
+    uint32_t avatarID;
+};
+
+// FRIEND_DELETE
+class Pak_FriendBasic : public Pak_Basic {
+   public:
+    uint32_t userID_client;
+    Pak_FriendBasic(uint32_t _userID_my, uint32_t _userID_client, PACKET_TYPE pak_type);
+};
+
+// FRIEND_ADD
+class Pak_FriendAdd : public Pak_FriendBasic {
+   public:
+    char verify_msg[256];
+    Pak_FriendAdd(uint32_t _userID_my, uint32_t _userID_client, QString _verify_msg);
+};
+
+// FRIEND REQUEST ACTION
+class Pak_FriendAccept : public Pak_FriendBasic {
+   public:
+    uint8_t isAccepted;
+    Pak_FriendAccept(uint32_t _userID_my, uint32_t _userID_client, uint8_t _isAccepted);
+};
 #endif  // PACKAGE_H

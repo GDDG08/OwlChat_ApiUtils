@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:25:29
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-21 00:56:01
+ * @LastEditTime : 2022-08-22 03:20:06
  */
 #include "socket_utils.h"
 
@@ -30,6 +30,7 @@ SocketUtils::~SocketUtils() {
 
 void SocketUtils::connectServer() {
     this->connectServer("localhost", 10000);
+    // this->connectServer("10.172.175.211", 10000);
     // this->connectServer("192.168.192.92", 10000);
 }
 void SocketUtils::connectServer(QString hostname, quint16 port) {
