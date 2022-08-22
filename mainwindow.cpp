@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:50:46
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-22 03:06:48
+ * @LastEditTime : 2022-08-22 14:22:51
  */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -36,40 +36,52 @@ MainWindow::~MainWindow() {
 // DEMO
 void MainWindow::on_pushButton_clicked() {
 #ifdef USER_1
-    api->onLogin(11111, "123456&dsw!");
+    api->onLogin(111111, "123456&dsw!");
 #else
-    api->onLogin(222222001, "123456&dsw!");
+    api->onLogin(222222, "123456&dsw!");
 #endif
 }
 // DEMO
 void MainWindow::on_pushButton_2_clicked() {
 #ifdef USER_1
-    api->onRegister(11111, "123456&dsw!", "lyh", 1u, 20u, 8u, 8u);
+    api->onRegister(111111, "123456&dsw!", "lyh", 1u, 20u, 8u, 8u);
 #else
-    api->onRegister(222222001, "123456&dsw!", "GDDG08", 1u, 20u, 8u, 8u);
+    api->onRegister(222222, "123456&dsw!", "GDDG08", 1u, 20u, 8u, 8u);
 #endif
 }
 // DEMO
 void MainWindow::on_pushButton_3_clicked() {
 #ifdef USER_1
-    api->sendMessage(22222, 12344, 0, "abc123!@#");
+    api->sendMessage(222222, 12344, 0, "abc123!@#");
 #else
-    api->sendMessage(11111, 12344, 0, "abc123!@#");
+    api->sendMessage(111111, 12344, 0, "abc123!@#");
 #endif
 }
 void MainWindow::on_pushButton_4_clicked() {
     api->getFriendList();
 }
 void MainWindow::on_pushButton_5_clicked() {
-    api->onFriendAdd(123, "love from China");
+#ifdef USER_1
+    api->onFriendAdd(222222, "love from China");
+#else
+    api->onFriendAdd(111111, "love from America");
+#endif
 }
 
 void MainWindow::on_pushButton_6_clicked() {
-    api->onFriendDelete(123);
+#ifdef USER_1
+    api->onFriendDelete(222222);
+#else
+    api->onFriendDelete(111111);
+#endif
 }
 
 void MainWindow::on_pushButton_7_clicked() {
-    api->onFriendAccept(1234, true);
+#ifdef USER_1
+    api->onFriendAccept(222222, true);
+#else
+    api->onFriendAccept(111111, true);
+#endif
 }
 
 // DEMO
