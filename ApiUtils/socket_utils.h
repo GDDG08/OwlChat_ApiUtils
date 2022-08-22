@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:25:29
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-22 20:01:05
+ * @LastEditTime : 2022-08-22 20:17:24
  */
 #ifndef SOCKET_UTILS_H
 #define SOCKET_UTILS_H
@@ -26,7 +26,7 @@ class SocketUtils : public QObject {
 
    public:
     // SocketUtils(ApiUtils* api);
-    SocketUtils();
+    explicit SocketUtils(QObject* parent = 0);
     ~SocketUtils();
     int sendData(QByteArray);
 

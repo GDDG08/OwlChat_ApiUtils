@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-22 19:43:31
+ * @LastEditTime : 2022-08-22 20:16:43
  */
 #ifndef API_UTILS_H
 #define API_UTILS_H
@@ -36,7 +36,7 @@ class ApiUtils : public QObject {
     Q_OBJECT
 
    public:
-    ApiUtils();
+    explicit ApiUtils(QObject *parent = 0);
     // IMPORTANT: API action, call it when you need
     int onLogin(uint32_t, QString);
     int onRegister(uint32_t _id, QString _pwd, QString _nickname, uint8_t _gender, uint8_t _age, uint8_t _city, uint8_t _job);

@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:50:46
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-22 19:38:30
+ * @LastEditTime : 2022-08-22 20:18:17
  */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -16,14 +16,14 @@ MainWindow::MainWindow(QWidget* parent)
     ui->setupUi(this);
 
     // DEMO
-    api = new ApiUtils();
+    api = new ApiUtils(this);
     connect(api, SIGNAL(onLoginCallback(uint8_t)), this, SLOT(test0(uint8_t)));
     connect(api, SIGNAL(onRegisterCallback(uint8_t)), this, SLOT(test1(uint8_t)));
     connect(api, SIGNAL(sendMessageCallback(uint8_t, uint32_t)), this, SLOT(test2(uint8_t, uint32_t)));
     connect(api, SIGNAL(recvMessageCallback(uint32_t, uint32_t, uint64_t, uint32_t, uint8_t, QString)), this, SLOT(test3(uint32_t, uint32_t, uint64_t, uint32_t, uint8_t, QString)));
     connect(api, SIGNAL(getFriendListCallback(QList<Pak_FriendBasicInfo>)), this, SLOT(test4(QList<Pak_FriendBasicInfo>)));
     connect(api, SIGNAL(onFriendAddCallback(uint8_t, uint32_t)), this, SLOT(test5(uint8_t, uint32_t)));
-    connect(api, SIGNAL(onFriendDeleteCallback(uint8_t, uint32_t )), this, SLOT(test6(uint8_t, uint32_t)));
+    connect(api, SIGNAL(onFriendDeleteCallback(uint8_t, uint32_t)), this, SLOT(test6(uint8_t, uint32_t)));
     connect(api, SIGNAL(onFriendAcceptCallback(uint8_t, uint32_t)), this, SLOT(test7(uint8_t, uint32_t)));
     connect(api, SIGNAL(onFriendRequestCallback(uint32_t, QString)), this, SLOT(test8(uint32_t, QString)));
 }

@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:25:29
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-22 20:05:36
+ * @LastEditTime : 2022-08-22 20:17:44
  */
 #include "socket_utils.h"
 
@@ -14,7 +14,7 @@
 //     SocketUtils();
 // }
 
-SocketUtils::SocketUtils() {
+SocketUtils::SocketUtils(QObject *parent) : QObject(parent) {
     this->client = new QTcpSocket();
 
     connect(client, SIGNAL(connected()), this, SLOT(connectCallback()));

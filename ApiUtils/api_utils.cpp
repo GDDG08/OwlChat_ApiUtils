@@ -5,13 +5,14 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-22 19:49:51
+ * @LastEditTime : 2022-08-22 20:38:16
  */
 #include "api_utils.h"
 
-ApiUtils::ApiUtils() {
+ApiUtils::ApiUtils(QObject* parent)
+    : QObject(parent) {
     // socketUtils = new SocketUtils(this);
-    socketUtils = new SocketUtils();
+    socketUtils = new SocketUtils(this);
     connect(socketUtils, SIGNAL(dataReceived(QByteArray)), this, SLOT(resultHandle(QByteArray)), Qt::QueuedConnection);
 }
 
@@ -233,7 +234,7 @@ void ApiUtils::resultHandle(QByteArray data) {
             Pak_FriendBasicRTN* rtn = (Pak_FriendBasicRTN*)data.data();
             qDebug() << "FRIEND_DELETE-->"
                      << "msg:" << pak->msg << ", userID_client:" << rtn->userID_client;
-            emit onFriendDeleteCallback(pak->msg,rtn->userID_client);
+            emit onFriendDeleteCallback(pak->msg, rtn->userID_client);
         } break;
         case PACKET_TYPE::FRIEND_ACCEPT: {
             Pak_FriendBasicRTN* rtn = (Pak_FriendBasicRTN*)data.data();
