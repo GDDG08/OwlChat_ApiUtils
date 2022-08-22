@@ -5,15 +5,17 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-23 02:29:31
+ * @LastEditTime : 2022-08-23 03:50:02
  */
 #include "api_utils.h"
 
 ApiUtils::ApiUtils(QObject* parent)
     : QObject(parent) {
-    // socketUtils = new SocketUtils(this);
-    socketUtils = new SocketUtils(this);
-    connect(socketUtils, SIGNAL(dataReceived(QByteArray)), this, SLOT(resultHandle(QByteArray)), Qt::QueuedConnection);
+    dataStorage = new DataStorage(this);
+
+    // Todo: enable network
+    //  socketUtils = new SocketUtils(this);
+    //  connect(socketUtils, SIGNAL(dataReceived(QByteArray)), this, SLOT(resultHandle(QByteArray)), Qt::QueuedConnection);
 }
 
 int ApiUtils::onLogin(uint32_t _id, QString _pwd) {
@@ -243,8 +245,7 @@ void ApiUtils::resultHandle(QByteArray data) {
             qDebug() << "USER_INFO-->"
                      << "userID:" << rtn.userID << ", nickname:" << QString(rtn.nickName) << ", avatarID:" << rtn.avatarID;
             emit getUserInfoCallback(rtn);
-        }
-        break;
+        } break;
         case PACKET_TYPE::FRIEND_ADD: {
             Pak_FriendBasicRTN* rtn = (Pak_FriendBasicRTN*)data.data();
             qDebug() << "FRIEND_ADD-->"
