@@ -5,11 +5,12 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:25:29
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-20 19:36:55
+ * @LastEditTime : 2022-08-22 20:01:05
  */
 #ifndef SOCKET_UTILS_H
 #define SOCKET_UTILS_H
 
+#include <exception>
 #include <QObject>
 #include <QDebug>
 #include <QTcpSocket>
@@ -33,6 +34,7 @@ class SocketUtils : public QObject {
     QTcpSocket* client;
     // DataHandler dataHandler;
     char pak_header[3] = {SOCKET_PACKET_HEADR_0, SOCKET_PACKET_HEADR_1, '\0'};
+    bool isConnected;
     void connectServer();
     void connectServer(QString hostname, quint16 port);
 

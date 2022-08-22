@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:52:10
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-22 00:21:37
+ * @LastEditTime : 2022-08-22 19:45:15
  */
 #ifndef PACKAGE_H
 #define PACKAGE_H
@@ -27,7 +27,8 @@ enum PACKET_TYPE {
     FRIEND_ADD,
     FRIEND_DELETE,
     FRIEND_ACCEPT,
-    FRIEND_REQUEST
+    FRIEND_REQUEST,
+    FRIEND_RESULT
 };
 class Packet {
    public:
@@ -44,6 +45,7 @@ class PacketRTN : public Packet {
     uint8_t msg;
 };
 
+/*======== LOGIN ========*/
 class Pak_Login : public Packet {
    private:
     uint32_t ID;
@@ -53,6 +55,12 @@ class Pak_Login : public Packet {
     Pak_Login(uint32_t _id, char _pwd[]);
 };
 
+class Pak_LoginRTN : public PacketRTN {
+   public:
+    char token[17];
+};
+
+/*======== REGISTER ========*/
 class Pak_Register : public Packet {
    private:
     uint32_t ID;
@@ -69,6 +77,7 @@ class Pak_Register : public Packet {
     Pak_Register(uint32_t _id, char _pwd[], char _nickname[], uint8_t _gender, uint8_t _age, uint8_t _city, uint8_t _job);
 };
 
+/*======== MESSAGE ========*/
 class Pak_Message : public Packet {
    public:
     uint32_t userID;
@@ -82,16 +91,30 @@ class Pak_Message : public Packet {
     ~Pak_Message();
 };
 
+class Pak_MessageRTN : public PacketRTN {
+   public:
+    uint32_t msgID;
+    Pak_MessageRTN(uint32_t _msgID);
+};
+
+class Pak_MessageRX : public Packet {
+   public:
+    uint32_t userID;
+    uint32_t sessionID;
+    uint64_t time;
+    uint8_t msg_type;
+    uint32_t msgID;
+    uint32_t msg_len;
+    char* content;
+};
+
+/*======== BASIC ========*/
+
 class Pak_Basic : public Packet {
    public:
     uint32_t userID;
 
     Pak_Basic(uint32_t _userID, PACKET_TYPE pak_type);
-};
-
-class Pak_LoginRTN : public PacketRTN {
-   public:
-    char token[17];
 };
 
 class Pak_BasicArrayRTN : public PacketRTN {
@@ -100,10 +123,19 @@ class Pak_BasicArrayRTN : public PacketRTN {
     char* start_ptr;
 };
 
+/*======== FRIEND ========*/
+
 struct Pak_FriendBasicInfo {
     uint32_t userID;
     char nickName[128];
     uint32_t avatarID;
+};
+class Pak_FriendBasicRTN : public PacketRTN {
+   public:
+    uint32_t userID;
+    uint32_t userID_client;
+
+    Pak_FriendBasicRTN(uint32_t _userID, uint32_t _userID_client, PACKET_TYPE type);
 };
 
 // FRIEND_DELETE
@@ -121,6 +153,7 @@ class Pak_FriendAdd : public Pak_FriendBasic {
 };
 
 // FRIEND REQUEST ACTION
+
 class Pak_FriendAccept : public Pak_FriendBasic {
    public:
     uint8_t isAccepted;

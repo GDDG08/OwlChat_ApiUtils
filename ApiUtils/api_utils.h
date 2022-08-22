@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-22 04:09:12
+ * @LastEditTime : 2022-08-22 19:43:31
  */
 #ifndef API_UTILS_H
 #define API_UTILS_H
@@ -41,6 +41,7 @@ class ApiUtils : public QObject {
     int onLogin(uint32_t, QString);
     int onRegister(uint32_t _id, QString _pwd, QString _nickname, uint8_t _gender, uint8_t _age, uint8_t _city, uint8_t _job);
     int sendMessage(uint32_t _sessionID, uint64_t _time, uint8_t _msg_type, QString _content);
+
     int getFriendList();
     int onFriendAdd(uint32_t _userID, QString _verify_msg);
     int onFriendDelete(uint32_t _userID);
@@ -51,6 +52,9 @@ class ApiUtils : public QObject {
     SocketUtils* socketUtils;
     uint32_t login_ID = 0, login_ID_trial = 0;
     char login_token[17] = {0};
+    int onRecvMessage(uint32_t _msgID);
+    int onFriendRequest(uint32_t _userID_client);
+    int onFriendResult(uint32_t _userID_client);
 
    private slots:
     void resultHandle(QByteArray);
@@ -59,15 +63,17 @@ class ApiUtils : public QObject {
     // IMPORTANT: API CallBack, plz connect during ApiUtil init
     void onLoginCallback(uint8_t);
     void onRegisterCallback(uint8_t);
-    void sendMessageCallback(uint8_t);
-    void recvMessageCallback(uint32_t fromUserID, uint32_t sessionID, uint64_t time, uint8_t msg_type, QString content);
+    void sendMessageCallback(uint8_t, uint32_t msgID);
+    void recvMessageCallback(uint32_t fromUserID, uint32_t sessionID, uint64_t time, uint32_t msgID, uint8_t msg_type, QString content);
     void getFriendListCallback(QList<Pak_FriendBasicInfo>);  // Caution list might be zero
-    void onFriendAddCallback(uint8_t);
-    void onFriendDeleteCallback(uint8_t);
+    void onFriendAddCallback(uint8_t, uint32_t userID_client);
+    void onFriendDeleteCallback(uint8_t, uint32_t userID_client);
     //@回应好友请求回调
-    void onFriendAcceptCallback(uint8_t);
+    void onFriendAcceptCallback(uint8_t, uint32_t userID_client);
     //@收到好友请求回调
     void onFriendRequestCallback(uint32_t fromUserID, QString verify_msg);
+    //@收到对方回执回调
+    void onFriendResultCallback(uint32_t userID_client, bool isAccepted);
 };
 
 #endif  // API_UTILS_H

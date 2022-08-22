@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-22 01:39:50
+ * @LastEditTime : 2022-08-22 19:49:51
  */
 #include "api_utils.h"
 
@@ -57,8 +57,21 @@ int ApiUtils::sendMessage(uint32_t _sessionID, uint64_t _time, uint8_t _msg_type
     data->chop(sizeof(char*));
     data->append(_content + '\0');
 
-    int a = socketUtils->sendData(*data);
-    qDebug() << a;
+    socketUtils->sendData(*data);
+    return 0;
+}
+
+int ApiUtils::onRecvMessage(uint32_t _msgID) {
+    qDebug() << "ApiUtils::"
+             << "onRecvMessage";
+    uint32_t guid = getGUID("onRecvMessage");
+
+    Pak_MessageRTN* pak = new Pak_MessageRTN(_msgID);
+    pak->GUID = guid;
+    strcpy(pak->token, login_token);
+    QByteArray* data = new QByteArray((char*)pak, sizeof(*pak));
+
+    socketUtils->sendData(*data);
     return 0;
 }
 
@@ -117,6 +130,34 @@ int ApiUtils::onFriendAccept(uint32_t _userID, bool _isAccepted) {
     return 0;
 }
 
+int ApiUtils::onFriendRequest(uint32_t _userID_client) {
+    qDebug() << "ApiUtils::"
+             << "onFriendRequest";
+    uint32_t guid = getGUID("onFriendRequest");
+
+    Pak_FriendBasicRTN* pak = new Pak_FriendBasicRTN(this->login_ID, _userID_client, PACKET_TYPE::FRIEND_REQUEST);
+    pak->GUID = guid;
+    strcpy(pak->token, login_token);
+    QByteArray* data = new QByteArray((char*)pak, sizeof(*pak));
+
+    socketUtils->sendData(*data);
+    return 0;
+}
+
+int ApiUtils::onFriendResult(uint32_t _userID_client) {
+    qDebug() << "ApiUtils::"
+             << "onFriendRequest";
+    uint32_t guid = getGUID("onFriendRequest");
+
+    Pak_FriendBasicRTN* pak = new Pak_FriendBasicRTN(this->login_ID, _userID_client, PACKET_TYPE::FRIEND_RESULT);
+    pak->GUID = guid;
+    strcpy(pak->token, login_token);
+    QByteArray* data = new QByteArray((char*)pak, sizeof(*pak));
+
+    socketUtils->sendData(*data);
+    return 0;
+}
+
 uint32_t ApiUtils::getGUID(QString tag) {
     return 111111112;
 }
@@ -145,19 +186,21 @@ void ApiUtils::resultHandle(QByteArray data) {
         } break;
 
         case PACKET_TYPE::SEND_MESSAGE: {
+            Pak_MessageRTN* rtn = (Pak_MessageRTN*)data.data();
             qDebug() << "SEND_MESSAGE-->"
-                     << "msg:" << pak->msg;
-            emit sendMessageCallback(pak->msg);
+                     << "msg:" << pak->msg << ", msgID:" << rtn->msgID;
+            emit sendMessageCallback(pak->msg, rtn->msgID);
         } break;
 
         case PACKET_TYPE::RECV_MESSAGE: {
-            Pak_Message* rtn = (Pak_Message*)data.data();
+            Pak_MessageRX* rtn = (Pak_MessageRX*)data.data();
             char* buff = (char*)&rtn->content;
             QByteArray byteArray(buff, rtn->msg_len);
             QString content(buff);
             qDebug() << "RECV_MESSAGE-->"
-                     << "fromUser:" << rtn->userID << ", toSession:" << rtn->sessionID << ", type:" << rtn->msg_type << ", msg:" << content;
-            emit recvMessageCallback(rtn->userID, rtn->sessionID, rtn->time, rtn->msg_type, content);
+                     << "fromUser:" << rtn->userID << ", toSession:" << rtn->sessionID << ", msgID:" << rtn->msgID << ", type:" << rtn->msg_type << ", msg:" << content;
+            emit recvMessageCallback(rtn->userID, rtn->sessionID, rtn->time, rtn->msgID, rtn->msg_type, content);
+            onRecvMessage(rtn->msgID);
         } break;
 
         case PACKET_TYPE::FRIEND_LIST: {
@@ -181,19 +224,22 @@ void ApiUtils::resultHandle(QByteArray data) {
             }
         } break;
         case PACKET_TYPE::FRIEND_ADD: {
+            Pak_FriendBasicRTN* rtn = (Pak_FriendBasicRTN*)data.data();
             qDebug() << "FRIEND_ADD-->"
-                     << "msg:" << pak->msg;
-            emit onFriendAddCallback(pak->msg);
+                     << "msg:" << pak->msg << ", userID_client:" << rtn->userID_client;
+            emit onFriendAddCallback(pak->msg, rtn->userID_client);
         } break;
         case PACKET_TYPE::FRIEND_DELETE: {
+            Pak_FriendBasicRTN* rtn = (Pak_FriendBasicRTN*)data.data();
             qDebug() << "FRIEND_DELETE-->"
-                     << "msg:" << pak->msg;
-            emit onFriendDeleteCallback(pak->msg);
+                     << "msg:" << pak->msg << ", userID_client:" << rtn->userID_client;
+            emit onFriendDeleteCallback(pak->msg,rtn->userID_client);
         } break;
         case PACKET_TYPE::FRIEND_ACCEPT: {
+            Pak_FriendBasicRTN* rtn = (Pak_FriendBasicRTN*)data.data();
             qDebug() << "FRIEND_ACCEPT-->"
-                     << "msg:" << pak->msg;
-            emit onFriendAcceptCallback(pak->msg);
+                     << "msg:" << pak->msg << ", userID_client:" << rtn->userID_client;
+            emit onFriendAcceptCallback(pak->msg, rtn->userID_client);
         } break;
         case PACKET_TYPE::FRIEND_REQUEST: {
             Pak_FriendAdd* rtn = (Pak_FriendAdd*)data.data();
@@ -202,6 +248,15 @@ void ApiUtils::resultHandle(QByteArray data) {
             qDebug() << "FRIEND_REQUEST-->"
                      << "fromUserID:" << rtn->userID << ", verify_msg:" << verify_msg;
             emit onFriendRequestCallback(rtn->userID, verify_msg);
+            onFriendRequest(rtn->userID);
+        } break;
+        case PACKET_TYPE::FRIEND_RESULT: {
+            Pak_FriendAccept* rtn = (Pak_FriendAccept*)data.data();
+
+            qDebug() << "FRIEND_RESULT-->"
+                     << "userID_client:" << rtn->userID_client << ", isAccepted:" << rtn->isAccepted;
+            emit onFriendResultCallback(rtn->userID_client, rtn->isAccepted);
+            onFriendResult(rtn->userID);
         } break;
     }
 }

@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:50:46
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-22 14:22:51
+ * @LastEditTime : 2022-08-22 19:38:30
  */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -19,12 +19,12 @@ MainWindow::MainWindow(QWidget* parent)
     api = new ApiUtils();
     connect(api, SIGNAL(onLoginCallback(uint8_t)), this, SLOT(test0(uint8_t)));
     connect(api, SIGNAL(onRegisterCallback(uint8_t)), this, SLOT(test1(uint8_t)));
-    connect(api, SIGNAL(sendMessageCallback(uint8_t)), this, SLOT(test2(uint8_t)));
-    connect(api, SIGNAL(recvMessageCallback(uint32_t, uint32_t, uint64_t, uint8_t, QString)), this, SLOT(test3(uint32_t, uint32_t, uint64_t, uint8_t, QString)));
+    connect(api, SIGNAL(sendMessageCallback(uint8_t, uint32_t)), this, SLOT(test2(uint8_t, uint32_t)));
+    connect(api, SIGNAL(recvMessageCallback(uint32_t, uint32_t, uint64_t, uint32_t, uint8_t, QString)), this, SLOT(test3(uint32_t, uint32_t, uint64_t, uint32_t, uint8_t, QString)));
     connect(api, SIGNAL(getFriendListCallback(QList<Pak_FriendBasicInfo>)), this, SLOT(test4(QList<Pak_FriendBasicInfo>)));
-    connect(api, SIGNAL(onFriendAddCallback(uint8_t)), this, SLOT(test5(uint8_t)));
-    connect(api, SIGNAL(onFriendDeleteCallback(uint8_t)), this, SLOT(test6(uint8_t)));
-    connect(api, SIGNAL(onFriendAcceptCallback(uint8_t)), this, SLOT(test7(uint8_t)));
+    connect(api, SIGNAL(onFriendAddCallback(uint8_t, uint32_t)), this, SLOT(test5(uint8_t, uint32_t)));
+    connect(api, SIGNAL(onFriendDeleteCallback(uint8_t, uint32_t )), this, SLOT(test6(uint8_t, uint32_t)));
+    connect(api, SIGNAL(onFriendAcceptCallback(uint8_t, uint32_t)), this, SLOT(test7(uint8_t, uint32_t)));
     connect(api, SIGNAL(onFriendRequestCallback(uint32_t, QString)), this, SLOT(test8(uint32_t, QString)));
 }
 
@@ -32,7 +32,7 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
-#define USER_2
+#define USER_1
 // DEMO
 void MainWindow::on_pushButton_clicked() {
 #ifdef USER_1
@@ -44,7 +44,8 @@ void MainWindow::on_pushButton_clicked() {
 // DEMO
 void MainWindow::on_pushButton_2_clicked() {
 #ifdef USER_1
-    api->onRegister(111111, "123456&dsw!", "lyh", 1u, 20u, 8u, 8u);
+    // api->onRegister(111111, "123456&dsw!", "lyh", 1u, 20u, 8u, 8u);
+    api->onRegister(11, "11", "lyh2", 1u, 20u, 8u, 8u);
 #else
     api->onRegister(222222, "123456&dsw!", "GDDG08", 1u, 20u, 8u, 8u);
 #endif
@@ -95,11 +96,11 @@ void MainWindow::test1(uint8_t status) {
     QMessageBox::information(this, "Api Result", "Register--->" + TASK_STATUS_MSG[status]);
 }
 // DEMO
-void MainWindow::test2(uint8_t status) {
+void MainWindow::test2(uint8_t status, uint32_t msgID) {
     qDebug() << "SendMsg--->" << TASK_STATUS_MSG[status];
     QMessageBox::information(this, "Api Result", "SendMsg--->" + TASK_STATUS_MSG[status]);
 }
-void MainWindow::test3(uint32_t fromUserID, uint32_t sessionID, uint64_t time, uint8_t msg_type, QString content) {
+void MainWindow::test3(uint32_t fromUserID, uint32_t sessionID, uint64_t time, uint32_t msgID, uint8_t msg_type, QString content) {
     qDebug() << "RecvMsg--->" << content;
     QMessageBox::information(this, "Api Result", "RecvMsg--->" + content);
 }
@@ -112,17 +113,17 @@ void MainWindow::test4(QList<Pak_FriendBasicInfo> friend_list) {
                                  QString::number(friend_list.size()));
 }
 // DEMO
-void MainWindow::test5(uint8_t status) {
+void MainWindow::test5(uint8_t status, uint32_t userID_client) {
     qDebug() << "FriendAdd--->" << TASK_STATUS_MSG[status];
     QMessageBox::information(this, "Api Result", "FriendAdd--->" + TASK_STATUS_MSG[status]);
 }
 // DEMO
-void MainWindow::test6(uint8_t status) {
+void MainWindow::test6(uint8_t status, uint32_t userID_client) {
     qDebug() << "FriendDelete--->" << TASK_STATUS_MSG[status];
     QMessageBox::information(this, "Api Result", "FriendDelete--->" + TASK_STATUS_MSG[status]);
 }
 // DEMO
-void MainWindow::test7(uint8_t status) {
+void MainWindow::test7(uint8_t status, uint32_t userID_client) {
     qDebug() << "FriendAccept--->" << TASK_STATUS_MSG[status];
     QMessageBox::information(this, "Api Result", "FriendAccept--->" + TASK_STATUS_MSG[status]);
 }

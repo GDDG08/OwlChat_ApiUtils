@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:25:29
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-22 03:20:06
+ * @LastEditTime : 2022-08-22 20:05:36
  */
 #include "socket_utils.h"
 
@@ -36,18 +36,21 @@ void SocketUtils::connectServer() {
 void SocketUtils::connectServer(QString hostname, quint16 port) {
     qDebug() << "SocketUtils-->"
              << "connecting...";
+    this->isConnected = false;
     this->client->connectToHost(hostname, port);
 }
 
 void SocketUtils::connectCallback(void) {
-    connect(client, SIGNAL(readyRead()), this, SLOT(recvCallback()), Qt::QueuedConnection);
     qDebug() << "SocketUtils-->"
              << "connected";
+    connect(client, SIGNAL(readyRead()), this, SLOT(recvCallback()), Qt::QueuedConnection);
+    this->isConnected = true;
 }
 
 void SocketUtils::disconnectCallback(void) {
     qDebug() << "SocketUtils-->"
              << "disconnected";
+    this->isConnected = false;
     this->connectServer();
 }
 
@@ -75,8 +78,14 @@ void SocketUtils::recvCallback(void) {
 int SocketUtils::sendData(QByteArray data) {
     qDebug() << "SocketUtils-->"
              << "TX--->" << data.toHex();
-    if (client->isWritable()) {
-        return client->write(data);
+    if (client->isWritable() && this->isConnected) {
+        try {
+            return client->write(data);
+        } catch (std::exception& e) {
+            qDebug() << "SocketUtils-->"
+                     << "Send error:" << e.what();
+            return -1;
+        }
     } else {
         qDebug() << "SocketUtils-->"
                  << "not writable";

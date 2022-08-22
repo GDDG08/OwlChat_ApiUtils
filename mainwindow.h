@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:50:46
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-22 01:01:10
+ * @LastEditTime : 2022-08-22 19:39:01
  */
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
@@ -38,14 +38,13 @@ class MainWindow : public QMainWindow {
 
     void test0(uint8_t);
     void test1(uint8_t);
-    void test2(uint8_t);
-    void test3(uint32_t fromUserID, uint32_t sessionID, uint64_t time, uint8_t msg_type, QString content);
+    void test2(uint8_t, uint32_t);
+    void test3(uint32_t fromUserID, uint32_t sessionID, uint64_t time, uint32_t msgID, uint8_t msg_type, QString content);
     void test4(QList<Pak_FriendBasicInfo> friend_list);
-    void test5(uint8_t);
-    void test6(uint8_t);
-    void test7(uint8_t);
+    void test5(uint8_t, uint32_t);
+    void test6(uint8_t, uint32_t);
+    void test7(uint8_t, uint32_t);
     void test8(uint32_t, QString);
-
 
    private:
     Ui::MainWindow* ui;

@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:52:10
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-22 01:40:04
+ * @LastEditTime : 2022-08-22 19:15:55
  */
 #include "packet.h"
 
@@ -36,6 +36,12 @@ Pak_Message::~Pak_Message() {
     free(this->content);
 };
 
+Pak_MessageRTN::Pak_MessageRTN(uint32_t _msgID)
+    : msgID(_msgID) {
+    this->len = PACKET_SIZE(this);
+    this->type = PACKET_TYPE::RECV_MESSAGE;
+}
+
 Pak_Basic::Pak_Basic(uint32_t _userID, PACKET_TYPE pak_type)
     : userID(_userID) {
     this->len = PACKET_SIZE(this);
@@ -49,10 +55,15 @@ Pak_FriendBasic::Pak_FriendBasic(uint32_t _userID_my, uint32_t _userID_client, P
 
 Pak_FriendAdd::Pak_FriendAdd(uint32_t _userID_my, uint32_t _userID_client, QString _verify_msg)
     : Pak_FriendBasic(_userID_my, _userID_client, PACKET_TYPE::FRIEND_ADD) {
-    memcpy(this->verify_msg, _verify_msg.toLocal8Bit().data(),sizeof(this->verify_msg));
+    memcpy(this->verify_msg, _verify_msg.toLocal8Bit().data(), sizeof(this->verify_msg));
     this->len = PACKET_SIZE(this);
 }
 
+Pak_FriendBasicRTN::Pak_FriendBasicRTN(uint32_t _userID, uint32_t _userID_client,PACKET_TYPE pak_type)
+    : userID(_userID), userID_client(_userID_client) {
+    this->len = PACKET_SIZE(this);
+    this->type = pak_type;
+}
 Pak_FriendAccept::Pak_FriendAccept(uint32_t _userID_my, uint32_t _userID_client, uint8_t _isAccepted)
     : Pak_FriendBasic(_userID_my, _userID_client, PACKET_TYPE::FRIEND_ACCEPT), isAccepted(_isAccepted) {
     this->len = PACKET_SIZE(this);
