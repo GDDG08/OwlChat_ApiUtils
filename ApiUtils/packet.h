@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:52:10
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-22 19:45:15
+ * @LastEditTime : 2022-08-23 02:09:18
  */
 #ifndef PACKAGE_H
 #define PACKAGE_H
@@ -28,7 +28,8 @@ enum PACKET_TYPE {
     FRIEND_DELETE,
     FRIEND_ACCEPT,
     FRIEND_REQUEST,
-    FRIEND_RESULT
+    FRIEND_RESULT,
+    USER_INFO
 };
 class Packet {
    public:
@@ -82,12 +83,13 @@ class Pak_Message : public Packet {
    public:
     uint32_t userID;
     uint32_t sessionID;
+    uint8_t sessionType;
     uint64_t time;
     uint8_t msg_type;
     uint32_t msg_len;
     char* content;
 
-    Pak_Message(uint32_t _userID, uint32_t _sessionID, uint64_t _time, uint8_t _msg_type, uint32_t _msg_len, QString _content);
+    Pak_Message(uint32_t _userID, uint32_t _sessionID, uint8_t _sessionType, uint64_t _time, uint8_t _msg_type, uint32_t _msg_len, QString _content);
     ~Pak_Message();
 };
 
@@ -101,6 +103,7 @@ class Pak_MessageRX : public Packet {
    public:
     uint32_t userID;
     uint32_t sessionID;
+    uint8_t sessionType;
     uint64_t time;
     uint8_t msg_type;
     uint32_t msgID;
@@ -125,7 +128,8 @@ class Pak_BasicArrayRTN : public PacketRTN {
 
 /*======== FRIEND ========*/
 
-struct Pak_FriendBasicInfo {
+class Pak_FriendBasicInfo {
+   public:
     uint32_t userID;
     char nickName[128];
     uint32_t avatarID;

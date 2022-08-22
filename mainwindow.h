@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:50:46
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-22 19:39:01
+ * @LastEditTime : 2022-08-23 02:36:55
  */
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
@@ -45,6 +45,10 @@ class MainWindow : public QMainWindow {
     void test6(uint8_t, uint32_t);
     void test7(uint8_t, uint32_t);
     void test8(uint32_t, QString);
+    void test9(uint32_t userID_client, bool isAccepted);
+    void test10(Pak_FriendBasicInfo info);
+
+    void on_pushButton_8_clicked();
 
    private:
     Ui::MainWindow* ui;

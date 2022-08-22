@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:52:10
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-22 19:15:55
+ * @LastEditTime : 2022-08-23 01:59:41
  */
 #include "packet.h"
 
@@ -24,8 +24,8 @@ Pak_Register::Pak_Register(uint32_t _id, char _pwd[], char _nickname[], uint8_t 
     this->type = PACKET_TYPE::REGISTER;
 };
 
-Pak_Message::Pak_Message(uint32_t _userID, uint32_t _sessionID, uint64_t _time, uint8_t _msg_type, uint32_t _msg_len, QString _content)
-    : userID(_userID), sessionID(_sessionID), time(_time), msg_type(_msg_type), msg_len(_msg_len) {
+Pak_Message::Pak_Message(uint32_t _userID, uint32_t _sessionID, uint8_t _sessionType, uint64_t _time, uint8_t _msg_type, uint32_t _msg_len, QString _content)
+    : userID(_userID), sessionID(_sessionID),sessionType(_sessionType) ,time(_time), msg_type(_msg_type), msg_len(_msg_len) {
     this->content = (char*)malloc(sizeof(char) * _msg_len);
     strcpy(this->content, _content.toLocal8Bit().data());
     this->len = PACKET_SIZE(this) - sizeof(char*) + sizeof(char) * _msg_len;
@@ -59,7 +59,7 @@ Pak_FriendAdd::Pak_FriendAdd(uint32_t _userID_my, uint32_t _userID_client, QStri
     this->len = PACKET_SIZE(this);
 }
 
-Pak_FriendBasicRTN::Pak_FriendBasicRTN(uint32_t _userID, uint32_t _userID_client,PACKET_TYPE pak_type)
+Pak_FriendBasicRTN::Pak_FriendBasicRTN(uint32_t _userID, uint32_t _userID_client, PACKET_TYPE pak_type)
     : userID(_userID), userID_client(_userID_client) {
     this->len = PACKET_SIZE(this);
     this->type = pak_type;

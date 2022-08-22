@@ -29,14 +29,16 @@ SOURCES += main.cpp\
     ApiUtils/socket_utils.cpp \
     ApiUtils/api_utils.cpp \
     ApiUtils/tools/byte_convert.cpp \
-    ApiUtils/tools/logger.cpp
+    ApiUtils/tools/logger.cpp \
+    ApiUtils/data/data_storage.cpp
 
 HEADERS  += mainwindow.h \
     ApiUtils/packet.h \
     ApiUtils/socket_utils.h \
     ApiUtils/api_utils.h \
     ApiUtils/tools/byte_convert.h \
-    ApiUtils/tools/logger.h
+    ApiUtils/tools/logger.h \
+    ApiUtils/data/data_storage.h
 
 FORMS    += mainwindow.ui
 

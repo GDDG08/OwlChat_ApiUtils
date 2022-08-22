@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-22 20:16:43
+ * @LastEditTime : 2022-08-23 02:28:21
  */
 #ifndef API_UTILS_H
 #define API_UTILS_H
@@ -36,13 +36,14 @@ class ApiUtils : public QObject {
     Q_OBJECT
 
    public:
-    explicit ApiUtils(QObject *parent = 0);
+    explicit ApiUtils(QObject* parent = 0);
     // IMPORTANT: API action, call it when you need
     int onLogin(uint32_t, QString);
     int onRegister(uint32_t _id, QString _pwd, QString _nickname, uint8_t _gender, uint8_t _age, uint8_t _city, uint8_t _job);
-    int sendMessage(uint32_t _sessionID, uint64_t _time, uint8_t _msg_type, QString _content);
+    int sendMessage(uint32_t _sessionID, uint8_t _sessionType, uint64_t _time, uint8_t _msg_type, QString _content);
 
     int getFriendList();
+    int getUserInfo(uint32_t _userID);
     int onFriendAdd(uint32_t _userID, QString _verify_msg);
     int onFriendDelete(uint32_t _userID);
     int onFriendAccept(uint32_t _userID, bool _isAccepted);
@@ -66,6 +67,7 @@ class ApiUtils : public QObject {
     void sendMessageCallback(uint8_t, uint32_t msgID);
     void recvMessageCallback(uint32_t fromUserID, uint32_t sessionID, uint64_t time, uint32_t msgID, uint8_t msg_type, QString content);
     void getFriendListCallback(QList<Pak_FriendBasicInfo>);  // Caution list might be zero
+    void getUserInfoCallback(Pak_FriendBasicInfo);           // Caution list might be zero
     void onFriendAddCallback(uint8_t, uint32_t userID_client);
     void onFriendDeleteCallback(uint8_t, uint32_t userID_client);
     //@回应好友请求回调

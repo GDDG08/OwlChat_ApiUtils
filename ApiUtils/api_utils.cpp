@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-22 20:38:16
+ * @LastEditTime : 2022-08-23 02:29:31
  */
 #include "api_utils.h"
 
@@ -45,13 +45,13 @@ int ApiUtils::onRegister(uint32_t _id, QString _pwd, QString _nickname, uint8_t 
     return 0;
 }
 
-int ApiUtils::sendMessage(uint32_t _sessionID, uint64_t _time, uint8_t _msg_type, QString _content) {
+int ApiUtils::sendMessage(uint32_t _sessionID, uint8_t _sessionType, uint64_t _time, uint8_t _msg_type, QString _content) {
     qDebug() << "ApiUtils::"
              << "sendMessage";
     uint32_t guid = getGUID("msg");
 
     uint32_t _msg_len = _content.size() + 1;
-    Pak_Message* pak = new Pak_Message(this->login_ID, _sessionID, _time, _msg_type, _msg_len, _content);
+    Pak_Message* pak = new Pak_Message(this->login_ID, _sessionID, _sessionType, _time, _msg_type, _msg_len, _content);
     pak->GUID = guid;
     strcpy(pak->token, login_token);
     QByteArray* data = new QByteArray((char*)pak, sizeof(*pak));
@@ -82,6 +82,19 @@ int ApiUtils::getFriendList() {
     uint32_t guid = getGUID("friendlist");
 
     Pak_Basic* pak = new Pak_Basic(this->login_ID, PACKET_TYPE::FRIEND_LIST);
+    pak->GUID = guid;
+    strcpy(pak->token, login_token);
+    QByteArray* data = new QByteArray((char*)pak, sizeof(*pak));
+
+    socketUtils->sendData(*data);
+    return 0;
+}
+int ApiUtils::getUserInfo(uint32_t _userID) {
+    qDebug() << "ApiUtils::"
+             << "getFriendInfo";
+    uint32_t guid = getGUID("getFriendInfo");
+
+    Pak_FriendBasic* pak = new Pak_FriendBasic(this->login_ID, _userID, PACKET_TYPE::USER_INFO);
     pak->GUID = guid;
     strcpy(pak->token, login_token);
     QByteArray* data = new QByteArray((char*)pak, sizeof(*pak));
@@ -147,8 +160,8 @@ int ApiUtils::onFriendRequest(uint32_t _userID_client) {
 
 int ApiUtils::onFriendResult(uint32_t _userID_client) {
     qDebug() << "ApiUtils::"
-             << "onFriendRequest";
-    uint32_t guid = getGUID("onFriendRequest");
+             << "onFriendResult";
+    uint32_t guid = getGUID("onFriendResult");
 
     Pak_FriendBasicRTN* pak = new Pak_FriendBasicRTN(this->login_ID, _userID_client, PACKET_TYPE::FRIEND_RESULT);
     pak->GUID = guid;
@@ -224,6 +237,14 @@ void ApiUtils::resultHandle(QByteArray data) {
                 emit getFriendListCallback(friend_list);
             }
         } break;
+        case PACKET_TYPE::USER_INFO: {
+            Pak_FriendBasicInfo rtn;
+            memcpy(&rtn, data.data(), sizeof(Pak_FriendBasicInfo));
+            qDebug() << "USER_INFO-->"
+                     << "userID:" << rtn.userID << ", nickname:" << QString(rtn.nickName) << ", avatarID:" << rtn.avatarID;
+            emit getUserInfoCallback(rtn);
+        }
+        break;
         case PACKET_TYPE::FRIEND_ADD: {
             Pak_FriendBasicRTN* rtn = (Pak_FriendBasicRTN*)data.data();
             qDebug() << "FRIEND_ADD-->"
@@ -255,8 +276,8 @@ void ApiUtils::resultHandle(QByteArray data) {
             Pak_FriendAccept* rtn = (Pak_FriendAccept*)data.data();
 
             qDebug() << "FRIEND_RESULT-->"
-                     << "userID_client:" << rtn->userID_client << ", isAccepted:" << rtn->isAccepted;
-            emit onFriendResultCallback(rtn->userID_client, rtn->isAccepted);
+                     << "userID_client:" << rtn->userID << ", isAccepted:" << rtn->isAccepted;
+            emit onFriendResultCallback(rtn->userID, rtn->isAccepted);
             onFriendResult(rtn->userID);
         } break;
     }

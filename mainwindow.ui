@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>661</width>
-    <height>510</height>
+    <width>620</width>
+    <height>490</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -106,6 +106,13 @@
       </property>
      </widget>
     </item>
+    <item row="3" column="1" alignment="Qt::AlignHCenter">
+     <widget class="QPushButton" name="pushButton_8">
+      <property name="text">
+       <string>UserInfo</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -113,7 +120,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>661</width>
+     <width>620</width>
      <height>25</height>
     </rect>
    </property>
