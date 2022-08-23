@@ -164,3 +164,23 @@ void MainWindow::on_pushButton_8_clicked() {
     api->getUserInfo(222222);
 #endif
 }
+
+void MainWindow::on_pushButton_9_clicked()
+{
+#ifdef USER_1
+    api->getUserDetail(111111);
+#else
+    api->getUserDetail(222222);
+#endif
+}
+
+void MainWindow::on_pushButton_11_clicked()
+{
+    api->onGroupCreate("JB");
+}
+
+void MainWindow::on_pushButton_10_clicked()
+{
+//    api->onGroupAdd(1,222222);
+    api->onGroupAdd(1);
+}

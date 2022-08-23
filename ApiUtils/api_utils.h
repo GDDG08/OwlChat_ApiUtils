@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 02:49:32
+ * @LastEditTime : 2022-08-24 04:27:00
  */
 #ifndef API_UTILS_H
 #define API_UTILS_H
@@ -49,6 +49,8 @@ class ApiUtils : public QObject {
     int onFriendAdd(uint32_t _userID, QString _verify_msg);
     int onFriendDelete(uint32_t _userID);
     int onFriendAccept(uint32_t _userID, bool _isAccepted);
+    int onGroupCreate(QString _groupName);
+    int onGroupAdd(uint32_t _groupID, int64_t _userID = -1);
 
    private:
     uint32_t getGUID(QString tag);
@@ -80,6 +82,8 @@ class ApiUtils : public QObject {
     void onFriendRequestCallback(uint32_t fromUserID, QString verify_msg);
     //@收到对方回执回调
     void onFriendResultCallback(uint32_t userID_client, bool isAccepted);
+    void onGroupCreateCallback(uint8_t, uint32_t);
+    void onGroupAddCallback(uint8_t);
 };
 
 #endif  // API_UTILS_H

@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 02:59:28
+ * @LastEditTime : 2022-08-24 04:26:14
  */
 #include "api_utils.h"
 
@@ -189,6 +189,34 @@ int ApiUtils::onFriendResult(uint32_t _userID_client) {
     return 0;
 }
 
+int ApiUtils::onGroupCreate(QString _groupName) {
+    qDebug() << "ApiUtils::"
+             << "onGroupCreate";
+    uint32_t guid = getGUID("onGroupCreate");
+
+    Pak_GroupCreate* pak = new Pak_GroupCreate(this->login_ID, _groupName);
+    pak->GUID = guid;
+    strcpy(pak->token, login_token);
+    QByteArray* data = new QByteArray((char*)pak, sizeof(*pak));
+
+    socketUtils->sendData(*data);
+    return 0;
+}
+int ApiUtils::onGroupAdd(uint32_t _groupID, int64_t _userID) {
+    qDebug() << "ApiUtils::"
+             << "onGroupAdd";
+    uint32_t guid = getGUID("onGroupAdd");
+    if (_userID == -1)
+        _userID = this->login_ID;
+    Pak_GroupAdd* pak = new Pak_GroupAdd(_userID, _groupID);
+    pak->GUID = guid;
+    strcpy(pak->token, login_token);
+    QByteArray* data = new QByteArray((char*)pak, sizeof(*pak));
+
+    socketUtils->sendData(*data);
+    return 0;
+}
+
 uint32_t ApiUtils::getGUID(QString tag) {
     return 111111112;
 }
@@ -314,6 +342,18 @@ void ApiUtils::resultHandle(QByteArray data) {
                      << "userID_client:" << rtn->userID << ", isAccepted:" << rtn->isAccepted;
             emit onFriendResultCallback(rtn->userID, rtn->isAccepted);
             onFriendResult(rtn->userID);
+        } break;
+        case PACKET_TYPE::GROUP_CREATE: {
+            Pak_GroupCreateRTN* rtn = (Pak_GroupCreateRTN*)data.data();
+
+            qDebug() << "GROUP_CREATE-->"
+                     << "msg:" << pak->msg << "groupID:" << rtn->groupID;
+            emit onGroupCreateCallback(pak->msg, rtn->groupID);
+        } break;
+        case PACKET_TYPE::GROUP_ADD: {
+            qDebug() << "GROUP_ADD-->"
+                     << "msg:" << pak->msg;
+            emit onGroupAddCallback(pak->msg);
         } break;
     }
 }
