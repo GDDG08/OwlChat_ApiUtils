@@ -17,6 +17,10 @@
 #include <QSqlError>
 #include <QSqlQuery>
 
+
+
+
+
 #include "sql.h"
 
 
@@ -29,7 +33,7 @@ class DataStorage : public QObject {
     // api
     void getFriendList();
     void getGroupList();
-    void getMsg(QString sessionid)
+    void getMsg(QString sessionid);
 
    private:
     QSqlDatabase db;

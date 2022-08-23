@@ -91,5 +91,5 @@ void DataStorage::getFriendList()
 
 void DataStorage::getGroupList()
 {
-
+    
 }
