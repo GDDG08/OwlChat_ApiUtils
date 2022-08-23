@@ -40,13 +40,13 @@ class MainWindow : public QMainWindow {
     void test1(uint8_t);
     void test2(uint8_t, uint32_t);
     void test3(uint32_t fromUserID, uint32_t sessionID, uint64_t time, uint32_t msgID, uint8_t msg_type, QString content);
-    void test4(QList<Pak_FriendBasicInfo> friend_list);
+    void test4(QList<D_UserBasicInfo> friend_list);
     void test5(uint8_t, uint32_t);
     void test6(uint8_t, uint32_t);
     void test7(uint8_t, uint32_t);
     void test8(uint32_t, QString);
     void test9(uint32_t userID_client, bool isAccepted);
-    void test10(Pak_FriendBasicInfo info);
+    void test10(D_UserBasicInfo info);
 
     void on_pushButton_8_clicked();
 
