@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:52:10
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-23 02:09:18
+ * @LastEditTime : 2022-08-23 10:22:13
  */
 #ifndef PACKAGE_H
 #define PACKAGE_H
@@ -131,9 +131,17 @@ class Pak_BasicArrayRTN : public PacketRTN {
 class Pak_FriendBasicInfo {
    public:
     uint32_t userID;
-    char nickName[128];
     uint32_t avatarID;
+    char nickName[128];
 };
+
+class Pak_FriendBasicInfoRTN : public PacketRTN {
+   public:
+    uint32_t userID;
+    uint32_t avatarID;
+    char nickName[128];
+};
+
 class Pak_FriendBasicRTN : public PacketRTN {
    public:
     uint32_t userID;

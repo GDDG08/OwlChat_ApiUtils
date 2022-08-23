@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-23 02:59:24
+ * @LastEditTime : 2022-08-23 20:22:27
  */
 #ifndef API_UTILS_H
 #define API_UTILS_H
@@ -16,7 +16,7 @@
 #include <ApiUtils/packet.h>
 #include <ApiUtils/socket_utils.h>
 #include <ApiUtils/tools/logger.h>
-#include <ApiUtils/data/data_storage.h>
+#include <ApiUtils/data/data_utils.h>
 
 enum TASK_STATUS {
     SUCCESS = 0,
@@ -52,7 +52,7 @@ class ApiUtils : public QObject {
    private:
     uint32_t getGUID(QString tag);
     SocketUtils* socketUtils;
-    DataStorage* dataStorage;
+    DataUtils* dataUtils;
     uint32_t login_ID = 0, login_ID_trial = 0;
     char login_token[17] = {0};
     int onRecvMessage(uint32_t _msgID);

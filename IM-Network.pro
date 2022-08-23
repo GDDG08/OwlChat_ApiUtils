@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     ApiUtils/api_utils.cpp \
     ApiUtils/tools/byte_convert.cpp \
     ApiUtils/tools/logger.cpp \
-    ApiUtils/data/data_storage.cpp
+    ApiUtils/data/data_storage.cpp \
+    ApiUtils/data/data_utils.cpp
 
 HEADERS  += mainwindow.h \
     ApiUtils/packet.h \
@@ -38,7 +39,9 @@ HEADERS  += mainwindow.h \
     ApiUtils/api_utils.h \
     ApiUtils/tools/byte_convert.h \
     ApiUtils/tools/logger.h \
-    ApiUtils/data/data_storage.h
+    ApiUtils/data/data_storage.h \
+    ApiUtils/data/data_utils.h \
+    ApiUtils/data/data_struct.h
 
 FORMS    += mainwindow.ui
 

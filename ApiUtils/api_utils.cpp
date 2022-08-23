@@ -5,17 +5,17 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-23 03:50:02
+ * @LastEditTime : 2022-08-23 19:40:56
  */
 #include "api_utils.h"
 
 ApiUtils::ApiUtils(QObject* parent)
     : QObject(parent) {
-    dataStorage = new DataStorage(this);
+    dataUtils = new DataUtils(this);
 
     // Todo: enable network
-    //  socketUtils = new SocketUtils(this);
-    //  connect(socketUtils, SIGNAL(dataReceived(QByteArray)), this, SLOT(resultHandle(QByteArray)), Qt::QueuedConnection);
+    socketUtils = new SocketUtils(this);
+    connect(socketUtils, SIGNAL(dataReceived(QByteArray)), this, SLOT(resultHandle(QByteArray)), Qt::QueuedConnection);
 }
 
 int ApiUtils::onLogin(uint32_t _id, QString _pwd) {
@@ -93,8 +93,8 @@ int ApiUtils::getFriendList() {
 }
 int ApiUtils::getUserInfo(uint32_t _userID) {
     qDebug() << "ApiUtils::"
-             << "getFriendInfo";
-    uint32_t guid = getGUID("getFriendInfo");
+             << "getUserInfo";
+    uint32_t guid = getGUID("getUserInfo");
 
     Pak_FriendBasic* pak = new Pak_FriendBasic(this->login_ID, _userID, PACKET_TYPE::USER_INFO);
     pak->GUID = guid;
@@ -240,11 +240,18 @@ void ApiUtils::resultHandle(QByteArray data) {
             }
         } break;
         case PACKET_TYPE::USER_INFO: {
-            Pak_FriendBasicInfo rtn;
-            memcpy(&rtn, data.data(), sizeof(Pak_FriendBasicInfo));
-            qDebug() << "USER_INFO-->"
-                     << "userID:" << rtn.userID << ", nickname:" << QString(rtn.nickName) << ", avatarID:" << rtn.avatarID;
-            emit getUserInfoCallback(rtn);
+            Pak_FriendBasicInfoRTN* rtn = (Pak_FriendBasicInfoRTN*)data.data();
+            if (rtn->msg == TASK_STATUS::SUCCESS) {
+                Pak_FriendBasicInfo info;
+                memcpy(&info, &rtn->userID, sizeof(Pak_FriendBasicInfo));
+                qDebug() << "USER_INFO-->"
+                         << "msg:" << TASK_STATUS_MSG[rtn->msg] << ", userID:" << info.userID << ", nickname:" << QString(info.nickName) << ", avatarID:" << info.avatarID;
+                emit getUserInfoCallback(info);
+            } else {
+                qDebug() << "USER_INFO-->"
+                         << "error: " << TASK_STATUS_MSG[rtn->msg];
+                //  emit getUserInfoCallback(NULL);
+            }
         } break;
         case PACKET_TYPE::FRIEND_ADD: {
             Pak_FriendBasicRTN* rtn = (Pak_FriendBasicRTN*)data.data();
