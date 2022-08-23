@@ -13,15 +13,18 @@ DataStorage::DataStorage(QObject* parent)
     : QObject(parent) {
     qDebug() << QSqlDatabase::drivers();
     creatDb();
-    openDb();
-
+    if(!openDb())
+        return;
+    createTable();
     QSqlQuery query;
-    query.exec("select * from user");
+    query.exec("select * from test");
 
     while (query.next()) {
-        uint32_t userID = query.value("userid").toInt();
+        QString userID = query.value("username").toString();
         qDebug() << userID;
     }
+
+
 
     // struct UserInfo{
     //     int char
@@ -42,10 +45,11 @@ void DataStorage::creatDb() {
         qDebug() << "QSqlDatabase::"
                  << "Database added";
         db = QSqlDatabase::addDatabase("QSQLITE");
-        db.setDatabaseName("C:/IM/pro.db");
+        // system("IF NOT EXIST \"C:/OwlChat\" MD  \"C:/OwlChat\" ");
+        db.setDatabaseName("C:/IM/test.db");
         // mklink /J C:\IM D:\@Projects\Qt\IM-Network
-        db.setUserName("pro");
-        db.setPassword("pro");
+        db.setUserName("admin");
+        db.setPassword("admin");
     }
 }
 
@@ -63,4 +67,29 @@ void DataStorage::closeDb() {
     qDebug() << "QSqlDatabase::"
              << "Database closed";
     db.close();
+}
+
+void DataStorage::createTable()
+{
+    QSqlQuery query;
+    query.exec(SQLCREATE_FRIEND);
+    query.exec(SQLCREATE_GP);
+    query.exec(SQLCREATE_MSG);
+    query.exec(SQLCREATE_FR);
+    qDebug() << "create table OK" << endl;
+}
+
+void DataStorage::getFriendList()
+{
+    QSqlQuery query;
+    query.exec("select * from user");
+    while (query.next()) {
+        QString userID = query.value("username").toString();
+        qDebug() << userID;
+    }
+}
+
+void DataStorage::getGroupList()
+{
+
 }
