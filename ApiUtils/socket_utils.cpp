@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:25:29
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-23 02:37:19
+ * @LastEditTime : 2022-08-23 09:52:01
  */
 #include "socket_utils.h"
 
@@ -30,7 +30,7 @@ SocketUtils::~SocketUtils() {
 }
 
 void SocketUtils::connectServer() {
-    this->connectServer("localhost", 12000);
+    this->connectServer("localhost", 10000);
     // this->connectServer("10.172.175.211", 10000);
     // this->connectServer("192.168.192.92", 10000);
 }

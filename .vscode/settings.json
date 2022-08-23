@@ -75,6 +75,7 @@
         "qsqlquery": "cpp",
         "qsqlerror": "cpp",
         "qsqltablemodel": "cpp",
-        "qsqldatabase": "cpp"
+        "qsqldatabase": "cpp",
+        "qlist": "cpp"
     }
 }
