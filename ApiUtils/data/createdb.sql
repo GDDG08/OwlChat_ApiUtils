@@ -1,4 +1,4 @@
-CREATE TABLE friend(
+CREATE TABLE user(
     userid varchar(15) PRIMARY KEY,
     nickname varchar(64) NOT NULL,
     gender INTEGER CHECK(gender IN (0, 1, 2))  DEFAULT 0,
@@ -6,9 +6,11 @@ CREATE TABLE friend(
     city int,
     job int,
     avatar varchar(256) DEFAULT '',
+    isfriend BOOLEAN CHECK(isfriend IN (0, 1))  DEFAULT 0,
     signature TEXT DEFAULT '',
     status int CHECK(status IN (0, 1, 2, 3))
 );
+
 
 create table gp(
     groupid int PRIMARY KEY,
