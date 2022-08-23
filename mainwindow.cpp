@@ -21,8 +21,8 @@ MainWindow::MainWindow(QWidget* parent)
     connect(api, SIGNAL(onRegisterCallback(uint8_t)), this, SLOT(test1(uint8_t)));
     connect(api, SIGNAL(sendMessageCallback(uint8_t, uint32_t)), this, SLOT(test2(uint8_t, uint32_t)));
     connect(api, SIGNAL(recvMessageCallback(uint32_t, uint32_t, uint64_t, uint32_t, uint8_t, QString)), this, SLOT(test3(uint32_t, uint32_t, uint64_t, uint32_t, uint8_t, QString)));
-    connect(api, SIGNAL(getFriendListCallback(QList<Pak_FriendBasicInfo>)), this, SLOT(test4(QList<Pak_FriendBasicInfo>)));
-    connect(api, SIGNAL(getUserInfoCallback(Pak_FriendBasicInfo)), this, SLOT(test10(Pak_FriendBasicInfo)));
+    connect(api, SIGNAL(getFriendListCallback(QList<D_UserBasicInfo>)), this, SLOT(test4(QList<D_UserBasicInfo>)));
+    connect(api, SIGNAL(getUserInfoCallback(D_UserBasicInfo)), this, SLOT(test10(D_UserBasicInfo)));
     connect(api, SIGNAL(onFriendAddCallback(uint8_t, uint32_t)), this, SLOT(test5(uint8_t, uint32_t)));
     connect(api, SIGNAL(onFriendDeleteCallback(uint8_t, uint32_t)), this, SLOT(test6(uint8_t, uint32_t)));
     connect(api, SIGNAL(onFriendAcceptCallback(uint8_t, uint32_t)), this, SLOT(test7(uint8_t, uint32_t)));
@@ -106,7 +106,7 @@ void MainWindow::test3(uint32_t fromUserID, uint32_t sessionID, uint64_t time, u
     qDebug() << "RecvMsg--->" << content;
     QMessageBox::information(this, "Api Result", "RecvMsg--->" + content);
 }
-void MainWindow::test4(QList<Pak_FriendBasicInfo> friend_list) {
+void MainWindow::test4(QList<D_UserBasicInfo> friend_list) {
     qDebug() << "FriendList--->"
              << "size: " << friend_list.size();
     QMessageBox::information(this, "Api Result",
@@ -148,7 +148,7 @@ void MainWindow::test9(uint32_t userID_client, bool isAccepted) {
                                  QString::number(userID_client) + ", isAccepted:" + QString::number(isAccepted));
 }
 
-void MainWindow::test10(Pak_FriendBasicInfo info) {
+void MainWindow::test10(D_UserBasicInfo info) {
     qDebug() << "UserInfo--->"
              << "userID: " << info.userID;
     QMessageBox::information(this, "Api Result",

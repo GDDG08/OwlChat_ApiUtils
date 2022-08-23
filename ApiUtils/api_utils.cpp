@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-23 19:40:56
+ * @LastEditTime : 2022-08-24 02:59:28
  */
 #include "api_utils.h"
 
@@ -91,12 +91,27 @@ int ApiUtils::getFriendList() {
     socketUtils->sendData(*data);
     return 0;
 }
+
 int ApiUtils::getUserInfo(uint32_t _userID) {
     qDebug() << "ApiUtils::"
              << "getUserInfo";
     uint32_t guid = getGUID("getUserInfo");
 
     Pak_FriendBasic* pak = new Pak_FriendBasic(this->login_ID, _userID, PACKET_TYPE::USER_INFO);
+    pak->GUID = guid;
+    strcpy(pak->token, login_token);
+    QByteArray* data = new QByteArray((char*)pak, sizeof(*pak));
+
+    socketUtils->sendData(*data);
+    return 0;
+}
+
+int ApiUtils::getUserDetail(uint32_t _userID) {
+    qDebug() << "ApiUtils::"
+             << "getUserDetail";
+    uint32_t guid = getGUID("getUserDetail");
+
+    Pak_FriendBasic* pak = new Pak_FriendBasic(this->login_ID, _userID, PACKET_TYPE::USER_DETAIL);
     pak->GUID = guid;
     strcpy(pak->token, login_token);
     QByteArray* data = new QByteArray((char*)pak, sizeof(*pak));
@@ -221,16 +236,16 @@ void ApiUtils::resultHandle(QByteArray data) {
 
         case PACKET_TYPE::FRIEND_LIST: {
             Pak_BasicArrayRTN* rtn = (Pak_BasicArrayRTN*)data.data();
-            QList<Pak_FriendBasicInfo> friend_list;
+            QList<D_UserBasicInfo> friend_list;
             if (rtn->list_len == 0) {
                 qDebug() << "FRIEND_LIST-->"
                          << "no friend";
                 emit getFriendListCallback(friend_list);
             } else {
-                // int size = sizeof(Pak_FriendBasicInfo) * rtn->list_len;
-                // Pak_FriendBasicInfo* friend_list = (Pak_FriendBasicInfo*)malloc(size);
+                // int size = sizeof(D_UserBasicInfo) * rtn->list_len;
+                // D_UserBasicInfo* friend_list = (D_UserBasicInfo*)malloc(size);
                 // memcpy(friend_list, &rtn->start_ptr, size);
-                Pak_FriendBasicInfo* ptr = (Pak_FriendBasicInfo*)&rtn->start_ptr;
+                D_UserBasicInfo* ptr = (D_UserBasicInfo*)&rtn->start_ptr;
                 for (int i = 0; i < rtn->list_len; i++) {
                     friend_list.append(*(ptr++));
                 }
@@ -242,13 +257,25 @@ void ApiUtils::resultHandle(QByteArray data) {
         case PACKET_TYPE::USER_INFO: {
             Pak_FriendBasicInfoRTN* rtn = (Pak_FriendBasicInfoRTN*)data.data();
             if (rtn->msg == TASK_STATUS::SUCCESS) {
-                Pak_FriendBasicInfo info;
-                memcpy(&info, &rtn->userID, sizeof(Pak_FriendBasicInfo));
+                D_UserBasicInfo info = {rtn->userID, rtn->avatarID, QString(rtn->nickName), rtn->userStatus};
                 qDebug() << "USER_INFO-->"
                          << "msg:" << TASK_STATUS_MSG[rtn->msg] << ", userID:" << info.userID << ", nickname:" << QString(info.nickName) << ", avatarID:" << info.avatarID;
                 emit getUserInfoCallback(info);
             } else {
                 qDebug() << "USER_INFO-->"
+                         << "error: " << TASK_STATUS_MSG[rtn->msg];
+                //  emit getUserInfoCallback(NULL);
+            }
+        } break;
+        case PACKET_TYPE::USER_DETAIL: {
+            Pak_FriendDetailInfoRTN* rtn = (Pak_FriendDetailInfoRTN*)data.data();
+            if (rtn->msg == TASK_STATUS::SUCCESS) {
+                D_UserDetailInfo info = {rtn->userID, QString(rtn->nickName), rtn->gender, rtn->age, rtn->city, rtn->job, rtn->avatarID, QString(rtn->signature), rtn->userStatus};
+                qDebug() << "USER_DETAIL-->"
+                         << "msg:" << TASK_STATUS_MSG[rtn->msg] << ", userID:" << info.userID;
+                emit getUserDetailCallback(info);
+            } else {
+                qDebug() << "USER_DETAIL-->"
                          << "error: " << TASK_STATUS_MSG[rtn->msg];
                 //  emit getUserInfoCallback(NULL);
             }
