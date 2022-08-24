@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-22 20:15:38
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 19:17:05
+ * @LastEditTime : 2022-08-24 19:49:44
  */
 #ifndef DATA_STORAGE_H
 #define DATA_STORAGE_H
@@ -32,7 +32,8 @@ class DataStorage : public QObject {
     void getFriendList();
     void getGroupList();
     void getMsg(QString sessionid);
-    int select(DataResult& res, std::string _sql, int resultNum);
+    // int select(DataResult& res, std::string _sql, int resultNum);
+    int select(DataResult& res, QString sql, int resultNum);
     int execute(QString sql);
     int execute(QSqlQuery& query, QString sql);
 

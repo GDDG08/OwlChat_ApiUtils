@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 02:59:28
+ * @LastEditTime : 2022-08-24 19:50:22
  */
 #include "api_utils.h"
 
@@ -270,7 +270,7 @@ void ApiUtils::resultHandle(QByteArray data) {
         case PACKET_TYPE::USER_DETAIL: {
             Pak_FriendDetailInfoRTN* rtn = (Pak_FriendDetailInfoRTN*)data.data();
             if (rtn->msg == TASK_STATUS::SUCCESS) {
-                D_UserDetailInfo info = {rtn->userID, QString(rtn->nickName), rtn->gender, rtn->age, rtn->city, rtn->job, rtn->avatarID, QString(rtn->signature), rtn->userStatus};
+                D_UserDetailInfo info = {rtn->userID, QString(rtn->nickName), rtn->gender, rtn->age, rtn->city, rtn->job, rtn->avatarID, 8, QString(rtn->signature), rtn->userStatus};
                 qDebug() << "USER_DETAIL-->"
                          << "msg:" << TASK_STATUS_MSG[rtn->msg] << ", userID:" << info.userID;
                 emit getUserDetailCallback(info);

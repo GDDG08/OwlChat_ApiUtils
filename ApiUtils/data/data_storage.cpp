@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-22 20:15:38
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 19:19:18
+ * @LastEditTime : 2022-08-24 19:49:39
  */
 #include "data_storage.h"
 
@@ -79,10 +79,13 @@ void DataStorage::createTable() {
     qDebug() << "create table OK" << endl;
 }
 
-int DataStorage::select(DataResult& res, std::string _sql, int resultNum) {
+// int DataStorage::select(DataResult& res, std::string _sql, int resultNum) {
+//     QString sql = QString::fromStdString(_sql);
+//     select(res, sql, resultNum);
+// }
+int DataStorage::select(DataResult& res, QString sql, int resultNum) {
     QSqlQuery query;
     query.setForwardOnly(true);
-    QString sql = QString::fromStdString(_sql);
     execute(query, sql);
 
     if (!query.isActive()) {
@@ -105,7 +108,6 @@ int DataStorage::execute(QString sql) {
 }
 
 int DataStorage::execute(QSqlQuery& query, QString sql) {
-    QSqlQuery query;
     bool status = query.exec(sql);
 
     if (status) {

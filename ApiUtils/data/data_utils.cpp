@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-23 18:20:00
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 19:29:29
+ * @LastEditTime : 2022-08-24 19:47:06
  */
 #include "data_utils.h"
 
@@ -33,25 +33,44 @@ int DataUtils::getMessages(uint32_t sessionID, uint8_t sessionType, QList<D_Mess
     qDebug() << "DataUtils"
              << "getMessages";
 
+    DataResult res;
     QString sql = QString("SELECT * FROM msg WHERE sessionid = '%1' and sessionType = %2").arg(QString(sessionID), QString(sessionType));
 
-    return dataStorage->execute(sql);
+    if (dataStorage->select(res, sql, 7) == 0) {
+        for (int i = 0; i < res.size(); i++) {
+            DataRow row = res[i];
+            D_Message info;
+            for (int j = 0; j < row.size(); j++) {
+                info.msgID = row[0].toUInt();
+                info.fromID = row[1].toUInt();
+                info.sessionID = row[2].toUInt();
+                info.sessionType = row[3].toUInt();
+                info.msg_type = row[4].toUInt();
+                info.time = row[5].toULongLong();
+                info.content = row[6].toString();
+            }
+            list.push_back(info);
+        }
+        return 0;
+    } else
+        return 1;
 }
 
 int DataUtils::getRecentMessageList(QList<D_RecentMsgListItem>& list) {
     qDebug() << "DataUtils"
              << "getRecentMessageList";
 
+    int error_count = 0;
     QSqlQuery query;
     QString sql = QString("SELECT sessionid, sessiontype from msg GROUP BY sessionid");
-    dataStorage->execute(query, sql);
+    error_count += dataStorage->execute(query, sql);
 
     while (query.next()) {
         QString sessionid = query.value(0).toString();
         int sessiontype = query.value(1).toInt();
         QSqlQuery query2;
         QString sql2 = sessiontype == 0 ? QString("select avatar, nickname, lastreadtime, lastreadmsg from user where userid = '%1'").arg(QString(sessionid)) : QString("select avtar, grouponame, lastreadtime, lastreadmsg from gp where groupid = %1").arg(QString(sessionid));
-        query2.exec();
+        error_count += dataStorage->execute(query2, sql2);
 
         QString avatar, nickname, lastreadtime, lastreadmsg;
         if (query2.next()) {
@@ -63,7 +82,7 @@ int DataUtils::getRecentMessageList(QList<D_RecentMsgListItem>& list) {
 
         QSqlQuery query3;
         QString sql3 = QString("select count(*) from msg where lastreadtime > '%1'").arg(lastreadtime);
-        query3.exec();
+        error_count += dataStorage->execute(query3, sql3);
         int noreadnum = 0;
         if (query3.next()) {
             noreadnum = query3.value(0).toInt();
@@ -77,7 +96,7 @@ int DataUtils::getRecentMessageList(QList<D_RecentMsgListItem>& list) {
         drml.last_msg = lastreadmsg;
         list.append(drml);
     }
-    return 1;
+    return error_count;
 }
 
 // FRIEND

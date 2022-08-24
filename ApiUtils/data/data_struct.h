@@ -40,6 +40,7 @@ struct D_Message {
     uint32_t sessionID;
     uint8_t sessionType;
     uint64_t time;
+    uint32_t msgID;
     uint8_t msg_type;
     QString content;
 };
