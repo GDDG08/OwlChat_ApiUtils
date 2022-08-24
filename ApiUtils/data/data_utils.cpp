@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-23 18:20:00
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 21:22:23
+ * @LastEditTime : 2022-08-24 21:25:19
  */
 #include "data_utils.h"
 
@@ -69,7 +69,7 @@ int DataUtils::getMessages(uint32_t sessionID, uint8_t sessionType, QList<D_Mess
     } else
         return 1;
 }
-
+// need some chage!!
 int DataUtils::getRecentMessageList(QList<D_RecentMsgListItem>& list) {
     qDebug() << "DataUtils"
              << "getRecentMessageList";
@@ -167,8 +167,8 @@ int DataUtils::addFriend(uint32_t userID) {
 int DataUtils::deleteFriend(uint32_t userID) {
     qDebug() << "DataUtils"
              << "deleteFriend";
-    // 仅仅取消标识
-    QString sql = QString("UPDATE user SET isfriend = FALSE WHERE userid = '%1'")
+    // ����ȡ����ʶ
+    QString sql = QString("UPDATE user SET isfriend = 0 WHERE userid = '%1'")
                       .arg(QString(userID));
     return dataStorage->execute(sql);
 }
@@ -294,7 +294,7 @@ int DataUtils::addGroup(uint32_t groupID) {
     qDebug() << "DataUtils"
              << "addGroup";
 
-    QString sql = QString("INSERT INTO gp (groupid) VALUES('%1')")
+    QString sql = QString("INSERT INTO gp (groupid) VALUES(%1)")
                       .arg(QString(groupID));
     return dataStorage->execute(sql);
 }
@@ -303,7 +303,7 @@ int DataUtils::deleteGroup(uint32_t groupID) {
     qDebug() << "DataUtils"
              << "deleteGroup";
 
-    QString sql = QString("DELETE FROM gp WHERE groupid = '%1'")
+    QString sql = QString("DELETE FROM gp WHERE groupid = %1")
                       .arg(QString(groupID));
     return dataStorage->execute(sql);
 }
