@@ -154,9 +154,24 @@ int DataUtils::deleteFriend(uint32_t userID) {
 int DataUtils::updateUserInfo(D_UserBasicInfo info) {
     qDebug() << "DataUtils"
              << "updateUserInfo";
-    QString sql = QString("update user set avatar = %1, nickname = '%2', status = %3").arg(
-        QString(info.avatarID), QString(info.nickName), QString(info.userStatus));
-    return dataStorage->execute(sql);
+    DataResult res;
+    QString sql = QString("select userid from user where userid = '%1'").arg(QString(info.userID));
+    if(dataStorage->select(res, sql, 1) == 0){
+        if (res.size() == 0){  // no then insert    -
+            sql = QString("insert into user(userid, nickname, avatar,status) \
+             values('%1', '%2', %3, %4)").arg(
+                QString(info.userID), QString(info.nickName), QString(info.avatarID), QString(info.userStatus));
+            return dataStorage->execute(sql);
+        }
+        else{  // have then update  
+            QString sql = QString("update user set avatar = %1, nickname = '%2', status = %3").arg(
+                QString(info.avatarID), QString(info.nickName), QString(info.userStatus));
+            return dataStorage->execute(sql);
+        }
+    }else{
+        return 1;
+    }
+    
 }
 
 int DataUtils::getUserInfo(uint32_t userID, D_UserBasicInfo& info) {

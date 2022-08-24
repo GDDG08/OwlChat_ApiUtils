@@ -54,7 +54,7 @@ AFTER INSERT ON msg
 FOR EACH ROW
 WHEN new.sessiontype == 0
 BEGIN  
-    update user set lastreadmsg = new.content where userid = new.sessionid
+    update user set lastreadmsg = new.content where userid = new.sessionid;
 END;
 
 create trigger last_msg_group 
