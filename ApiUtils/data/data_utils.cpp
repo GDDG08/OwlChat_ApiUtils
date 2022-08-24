@@ -158,7 +158,7 @@ int DataUtils::getFriendRequestList(QList<D_FriendRequest>& list) {
 int DataUtils::addFriend(uint32_t userID) {
     qDebug() << "DataUtils"
              << "addFriend";
-    // 可能已经有了但还不是friend
+    // 鍙兘宸茬粡鏈変簡浣嗚繕涓嶆槸friend
     QString sql = QString("INSERT INTO user (userid, isfriend) VALUES('%1',TRUE)")
                       .arg(QString::number(userID));
     return dataStorage->execute(sql);
@@ -167,12 +167,13 @@ int DataUtils::addFriend(uint32_t userID) {
 int DataUtils::deleteFriend(uint32_t userID) {
     qDebug() << "DataUtils"
              << "deleteFriend";
+    // 锟斤拷锟斤拷取锟斤拷锟斤拷识
     QString sql = QString("UPDATE user SET isfriend = 0 WHERE userid = '%1'")
                       .arg(QString::number(userID));
     return dataStorage->execute(sql);
 }
 
-// update 的时候可能已经有
+// update 鐨勬椂鍊欏彲鑳藉凡缁忔湁
 
 int DataUtils::updateUserInfo(D_UserBasicInfo info) {
     qDebug() << "DataUtils"
@@ -199,34 +200,6 @@ int DataUtils::updateUserInfo(D_UserBasicInfo info) {
     } else {
         return 1;
     }
-}
-    }else{
-        return 1;
-    }
-    
-=======
-    QString sql = QString("select userid from user where userid = '%1'").arg(QString::number(info.userID));
-    if (dataStorage->select(res, sql, 1) == 0) {
-        if (res.size() == 0) {
-            // no then insert  -
-            sql = QString(
-                      "insert into user(userid, nickname, avatar,status) \
-      values('%1', '%2', %3, %4)")
-                      .arg(
-                          QString::number(info.userID), info.nickName, QString::number(info.avatarID), QString::number(info.userStatus));
-            return dataStorage->execute(sql);
-
-        } else {
-            // have then update
-            QString sql = QString("update user set avatar = %1, nickname = '%2', status = %3")
-            .arg(QString::number(info.avatarID), info.nickName, QString::number(info.userStatus));
-            return dataStorage->execute(sql);
-        }
-
-    } else {
-        return 1;
-    }
->>>>>>> 1d18defb94a74ec22c0fddd28c847dcf0d575946
 }
 
 int DataUtils::getUserInfo(uint32_t userID, D_UserBasicInfo& info) {
