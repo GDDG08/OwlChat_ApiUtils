@@ -78,36 +78,63 @@ int DataUtils::getRecentMessageList(QList<D_RecentMsgListItem> &list)
         drml.last_msg = lastreadmsg;
         list.append(drml);
     }
-    return 1;
+    return 0;
 }
 
 // FRIEND
 int DataUtils::addFriendRequest(uint32_t fromID, uint32_t toID, QString verify_msg)
 {
+    QSqlQuery qry;
+    QString sql = QString("insert into fr(fromuserid, touserid, content) values('%1', '%2', '%3')").arg(
+        QString(fromID),QString(toID),QString(verify_msg)
+    );
+    qry.exec(sql);
+    return 0;
 }
+
+
 int DataUtils::changeFriendRequestStatus(uint32_t fromID, uint32_t toID, uint8_t status)
 {
+    QSqlQuery qry;
+    QString sql = QString("update fr set status = %1 where fromuserid = '%2' and touserid = '%3'").arg(
+        QString(status),QString(fromID),QString(toID)
+    );
+    qry.exec(sql);
+    return 0;
 }
 int DataUtils::addFriend(uint32_t userID)
 {
-    // �?能已经有了但还不是friend
+    QSqlQuery qry;
+    QString sql = QString("insert into user(userid) values('%s')").arg(QString(userID));
+    qry.exec(sql);
+    return 0;
 }
 int DataUtils::deleteFriend(uint32_t userID)
 {
-    // 仅仅取消标识
+    QSqlQuery qry;
+    QString sql = QString("delete from user where userid = '%1'").arg(QString(userID));
+    qry.exec();
+    return 0;
 }
 
-// update 的时候可能已经有�?
 int DataUtils::updateUserInfo(D_UserBasicInfo info)
 {
+    QSqlQuery qry;
+    QString sql = QString("update user set nickname = '%1', avatar = %2, status = %3").arg(
+        QString(info.nickName), QString(info.avatarID), QString(info.userStatus));
+    qry.exec();
+    return 0;
 }
 
 int DataUtils::getUserInfo(uint32_t userID, D_UserBasicInfo &info)
 {
+    QSqlQuery qry;
+    QString sql = QString("")
 }
 
 int DataUtils::updateUserDetail(D_UserDetailInfo info)
 {
+
 }
 
 int DataUtils::getUserDetail(uint32_t userID, D_UserDetailInfo &info)

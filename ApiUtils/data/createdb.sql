@@ -5,12 +5,12 @@ CREATE TABLE user(
     age INTEGER default 0,
     city int default 0,
     job int default 0,
-    avatar varchar(256) DEFAULT '',
+    avatar int DEFAULT 0,
     isfriend BOOLEAN CHECK(isfriend IN (0, 1))  DEFAULT 0,
     lastreadtime TimeStamp DEFAULT (DATETIME('now', 'localtime')),
     lastreadmsg text default '',
     signature TEXT DEFAULT '',
-    status int CHECK(status IN (0, 1, 2, 3))
+    status int CHECK(status IN (0, 1, 2, 3)) default 0
 );
 
 
@@ -42,7 +42,7 @@ create table fr(
     fromuserid varchar(15) NOT NULL,
     touserid varchar(15) NOT NULL,
     content text DEFAULT '',
-    status int CHECK(status in (1, 2, 3, 4)),
+    status int CHECK(status in (1, 2, 3, 4)) default 1,
     tm TimeStamp DEFAULT (DATETIME('now', 'localtime')),
     FOREIGN key (fromuserid) REFERENCES user(userid) ON DELETE CASCADE,
     FOREIGN KEY (touserid) REFERENCES user(userid) ON DELETE CASCADE
