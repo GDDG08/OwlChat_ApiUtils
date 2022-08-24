@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-22 20:15:38
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 22:25:04
+ * @LastEditTime : 2022-08-25 01:45:31
  */
 #include "data_storage.h"
 
@@ -115,6 +115,7 @@ int DataStorage::execute(QString sql) {
 
 int DataStorage::execute(QSqlQuery& query, QString sql) {
     bool status = query.exec(sql);
+    qDebug() << "DataStorage::excute SQL:" << sql << endl;
 
     if (status) {
         return 0;

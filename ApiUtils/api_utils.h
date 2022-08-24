@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 15:58:41
+ * @LastEditTime : 2022-08-25 03:57:45
  */
 #ifndef API_UTILS_H
 #define API_UTILS_H
@@ -46,6 +46,15 @@ enum FRIEND_REQUEST_STATUS {
     ACCEPT,
     REJECT
 };
+
+enum MSG_TYPE {
+    M_WORD = 0u,
+    M_FILE,
+    M_PICTURE,
+    M_EMOJI,
+    M_GROUP_SYSTEM
+};
+
 class ApiUtils : public QObject {
     Q_OBJECT
 
@@ -69,7 +78,7 @@ class ApiUtils : public QObject {
     int onDownFile(int _msgID, QString _filePath);
 #endif
 
-   private:
+    //    private:
     uint32_t getGUID(QString tag);
     SocketUtils* socketUtils;
 #ifdef HTTP_ENABLE
