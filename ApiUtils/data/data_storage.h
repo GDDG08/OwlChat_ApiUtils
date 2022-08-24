@@ -21,6 +21,7 @@
 #include <vector>
 
 typedef std::vector<std::vector<QVariant>> DataResult;
+typedef std::vector<QVariant> DataRow;
 class DataStorage : public QObject {
     Q_OBJECT
    public:
