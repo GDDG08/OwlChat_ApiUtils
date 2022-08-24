@@ -7,10 +7,10 @@ CREATE TABLE user(
     job int default 0,
     avatar varchar(256) DEFAULT '',
     isfriend BOOLEAN CHECK(isfriend IN (0, 1))  DEFAULT 0,
-    lastreadtime TimeStamp DEFAULT (DATETIME('now', 'localtime')),
-    lastreadmsg text default '',
     signature TEXT DEFAULT '',
     status int CHECK(status IN (0, 1, 2, 3))
+    lastreadtime TimeStamp DEFAULT (DATETIME('now', 'localtime')),
+    lastreadmsg text default '',
 );
 
 

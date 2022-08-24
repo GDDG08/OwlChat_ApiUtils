@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-22 20:15:38
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 17:47:00
+ * @LastEditTime : 2022-08-24 18:12:07
  */
 #ifndef DATA_STORAGE_H
 #define DATA_STORAGE_H
@@ -20,7 +20,8 @@
 #include "sql.h"
 #include <vector>
 
-    typedef std::vector<std::vector<QVariant>> DataResult;
+typedef std::vector<std::vector<QVariant>> DataResult;
+typedef std::vector<QVariant> DataRow;
 class DataStorage : public QObject {
     Q_OBJECT
    public:

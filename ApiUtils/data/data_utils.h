@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-23 18:20:00
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 02:50:59
+ * @LastEditTime : 2022-08-24 18:12:01
  */
 #ifndef DATA_UTILS_H
 #define DATA_UTILS_H
@@ -14,7 +14,6 @@
 #include <QString>
 #include <ApiUtils/data/data_storage.h>
 #include <ApiUtils/data/data_struct.h>
-
 
 #include <QDateTime>
 class DataUtils : public QObject {

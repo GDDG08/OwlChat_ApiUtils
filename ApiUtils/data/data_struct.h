@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-23 20:25:52
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 02:57:53
+ * @LastEditTime : 2022-08-24 18:16:49
  */
 #ifndef DATA_STRUCT_H
 #define DATA_STRUCT_H
@@ -30,6 +30,7 @@ struct D_UserDetailInfo {
     uint8_t city;
     uint8_t job;
     uint32_t avatarID;
+    uint8_t isFriend;
     QString signature;
     uint8_t userStatus;
 };
@@ -53,8 +54,8 @@ struct D_RecentMsgListItem {
 
 struct D_GroupInfo {
     uint32_t groupID;
-    char groupName[64];
+    QString groupName;
     uint32_t adminUser;
     uint32_t avatarID;
-    char board[1024];
+    QString board;
 };

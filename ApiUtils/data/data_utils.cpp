@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-23 18:20:00
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 17:59:18
+ * @LastEditTime : 2022-08-24 18:18:35
  */
 #include "data_utils.h"
 
@@ -98,6 +98,20 @@ int DataUtils::updateUserDetail(D_UserDetailInfo info) {
 }
 
 int DataUtils::getUserDetail(uint32_t userID, D_UserDetailInfo& info) {
+    DataResult res;
+    dataStorage->select(res, "SELECT * FROM user", 10);
+
+    DataRow row = res[0];
+    info.userID = row[0].toUInt();
+    info.nickName = row[1].toString();
+    info.gender = row[2].toUInt();
+    info.age = row[3].toUInt();
+    info.city = row[4].toUInt();
+    info.job = row[5].toUInt();
+    info.avatarID = row[6].toUInt();
+    info.isFriend = row[7].toUInt();
+    info.signature = row[8].toString();
+    info.userStatus = row[9].toUInt();
 }
 
 int DataUtils::updateFriendList(QList<D_UserBasicInfo> list) {
@@ -113,7 +127,18 @@ int DataUtils::updateGroupList(QList<D_GroupInfo> list) {
 int DataUtils::getGroupList(QList<D_GroupInfo>& list) {
     DataResult res;
     dataStorage->select(res, "SELECT * FROM gp", 5);
-    // qDebug() << "select";
+    for (int i = 0; i < res.size(); i++) {
+        DataRow row;
+        D_GroupInfo info;
+        for (int j = 0; j < row.size(); j++) {
+            info.groupID = row[0].toUInt();
+            info.groupName = row[1].toString();
+            info.adminUser = row[2].toUInt();
+            info.avatarID = row[3].toUInt();
+            info.board = row[4].toString();
+        }
+        list.push_back(info);
+    }
 }
 
 int DataUtils::updateGroupInfo(D_GroupInfo info) {
