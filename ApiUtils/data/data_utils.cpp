@@ -44,15 +44,41 @@ int DataUtils::getMessages(uint32_t sessionID, uint8_t sessionType, QList<D_Mess
 int DataUtils::getRecentMessageList(QList<D_RecentMsgListItem> &list)
 {
     QSqlQuery query;
-    QString sql = QString("SELECT sessionid, sessiontype, tm FROM msg ORDER BY tm DESC");
+    QString sql = QString("SELECT sessionid, sessiontype from msg GROUP BY sessionid");
     while(query.next())
     {
         QString sessionid = query.value(0).toString();
         int sessiontype = query.value(1).toInt();
-        QDateTime datetime = query.value(2).toDateTime();
-        
+        QSqlQuery query2;
+        QString sql2 = sessiontype == 0?QString("select avatar, nickname, lastreadtime, lastreadmsg from user where userid = '%1'").arg(QString(sessionid)) :
+        QString("select avtar, grouponame, lastreadtime, lastreadmsg from gp where groupid = %1").arg(QString(sessionid));
+        query2.exec();
 
+        QString avatar, nickname, lastreadtime, lastreadmsg;
+        if(query2.next()){
+            avatar = query2.value(0).toString();
+            nickname = query2.value(1).toString();
+            lastreadtime = query2.value(2).toString();
+            lastreadmsg = query2.value(3).toString();
+        }
+        
+        QSqlQuery query3;
+        QString sql3 = QString("select count(*) from msg where lastreadtime > '%1'").arg(lastreadtime);
+        query3.exec();
+        int noreadnum = 0;
+        if(query3.next()){
+            noreadnum = query3.value(0).toInt();
+        }
+
+        D_RecentMsgListItem drml;
+        drml.sessionID = sessionid.toInt();
+        drml.sessionType = sessiontype;
+        drml.unread_num = noreadnum;
+        drml.sessionName = nickname;
+        drml.last_msg = lastreadmsg;
+        list.append(drml);
     }
+    return 1;
 }
 
 // FRIEND

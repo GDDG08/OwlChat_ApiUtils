@@ -15,6 +15,8 @@
 #include <ApiUtils/data/data_storage.h>
 #include <ApiUtils/data/data_struct.h>
 
+
+#include <QDateTime>
 class DataUtils : public QObject {
     Q_OBJECT
    public:
