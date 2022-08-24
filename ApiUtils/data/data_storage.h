@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-22 20:15:38
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 19:49:44
+ * @LastEditTime : 2022-08-24 21:40:00
  */
 #ifndef DATA_STORAGE_H
 #define DATA_STORAGE_H
@@ -22,6 +22,7 @@
 
 typedef std::vector<std::vector<QVariant>> DataResult;
 typedef std::vector<QVariant> DataRow;
+
 class DataStorage : public QObject {
     Q_OBJECT
    public:
@@ -37,9 +38,9 @@ class DataStorage : public QObject {
     int execute(QString sql);
     int execute(QSqlQuery& query, QString sql);
 
-   private:
+   public:
     QSqlDatabase db;
-    void creatDb();
+    void connectDb(uint32_t userID, QString pwd);
     bool openDb();
     void closeDb();
     void createTable();

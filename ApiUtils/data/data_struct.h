@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-23 20:25:52
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 18:16:49
+ * @LastEditTime : 2022-08-24 21:10:59
  */
 #ifndef DATA_STRUCT_H
 #define DATA_STRUCT_H
@@ -19,6 +19,12 @@ struct D_UserBasicInfo {
     uint32_t userID;
     uint32_t avatarID;
     QString nickName;
+    uint8_t userStatus;
+};
+struct Pak_UserBasicInfo {
+    uint32_t userID;
+    uint32_t avatarID;
+    char nickName[128];
     uint8_t userStatus;
 };
 
@@ -43,6 +49,14 @@ struct D_Message {
     uint32_t msgID;
     uint8_t msg_type;
     QString content;
+};
+
+struct D_FriendRequest {
+    uint32_t fromID;
+    uint32_t toID;
+    QString verify_msg;
+    uint8_t status;
+    uint64_t timeStamp;
 };
 
 struct D_RecentMsgListItem {

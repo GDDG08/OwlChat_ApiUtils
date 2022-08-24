@@ -35,8 +35,9 @@ create table msg(
     msgtype int CHECK (msgtype in (0, 1, 2)),
     tm TimeStamp DEFAULT (DATETIME('now', 'localtime')),
     content TEXT DEFAULT '',
-    FOREIGN key (fromuserid) REFERENCES user (userid) ON DELETE CASCADE,
-    FOREIGN KEY (touserid) REFERENCES user (userid) ON DELETE CASCADE
+    guid INTEGER DEFAULT -1,
+    -- FOREIGN key (fromuserid) REFERENCES user (userid) ON DELETE CASCADE,
+    -- FOREIGN KEY (touserid) REFERENCES user (userid) ON DELETE CASCADE
 );
 
 create table fr(
@@ -45,8 +46,8 @@ create table fr(
     content text DEFAULT '',
     status int CHECK(status in (1, 2, 3, 4)) default 1,
     tm TimeStamp DEFAULT (DATETIME('now', 'localtime')),
-    FOREIGN key (fromuserid) REFERENCES user(userid) ON DELETE CASCADE,
-    FOREIGN KEY (touserid) REFERENCES user(userid) ON DELETE CASCADE
+    -- FOREIGN key (fromuserid) REFERENCES user(userid) ON DELETE CASCADE,
+    -- FOREIGN KEY (touserid) REFERENCES user(userid) ON DELETE CASCADE
 );
 
 create trigger last_msg_user 

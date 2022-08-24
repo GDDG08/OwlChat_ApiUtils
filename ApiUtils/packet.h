@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:52:10
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 02:44:32
+ * @LastEditTime : 2022-08-24 16:01:19
  */
 #ifndef PACKAGE_H
 #define PACKAGE_H
@@ -30,7 +30,10 @@ enum PACKET_TYPE {
     FRIEND_REQUEST,
     FRIEND_RESULT,
     USER_INFO,
-    USER_DETAIL
+    USER_DETAIL,
+    GROUP_CREATE,
+    GROUP_ADD
+
 };
 class Packet {
    public:
@@ -131,9 +134,9 @@ class Pak_BasicArrayRTN : public PacketRTN {
 
 class Pak_FriendBasicInfoRTN : public PacketRTN {
    public:
-    uint32_t userID;
     uint32_t avatarID;
     char nickName[128];
+    uint32_t userID;
     uint8_t userStatus;
 };
 
@@ -179,4 +182,24 @@ class Pak_FriendAccept : public Pak_FriendBasic {
     uint8_t isAccepted;
     Pak_FriendAccept(uint32_t _userID_my, uint32_t _userID_client, uint8_t _isAccepted);
 };
+
+// GROUP
+class Pak_GroupCreate : public Pak_Basic {
+   public:
+    char groupName[256];
+    Pak_GroupCreate(uint32_t _userID, QString _groupName);
+};
+
+class Pak_GroupCreateRTN : public PacketRTN {
+   public:
+    uint32_t groupID;
+};
+
+class Pak_GroupAdd : public Pak_Basic {
+   public:
+    uint32_t clientID;
+    uint32_t groupID;
+    Pak_GroupAdd(uint32_t _userID,uint32_t _clientID, uint32_t _groupID);
+};
+
 #endif  // PACKAGE_H

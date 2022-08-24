@@ -5,17 +5,18 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-22 20:15:38
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 19:58:54
+ * @LastEditTime : 2022-08-24 22:25:04
  */
 #include "data_storage.h"
 
 DataStorage::DataStorage(QObject* parent)
     : QObject(parent) {
     qDebug() << QSqlDatabase::drivers();
-    creatDb();
-    if (!openDb())
-        return;
-    createTable();
+
+    // Todo Remove
+    // connectDb(111, "123456");
+    // openDb();
+    // createTable();
     // QSqlQuery query;
     // query.exec("select * from test");
 
@@ -37,7 +38,10 @@ DataStorage::~DataStorage() {
     closeDb();
 }
 
-void DataStorage::creatDb() {
+void DataStorage::connectDb(uint32_t userID, QString pwd) {
+    closeDb();
+    QString user = QString::number(userID);
+
     if (QSqlDatabase::contains("qt_sql_default_connection")) {
         qDebug() << "QSqlDatabase::"
                  << "Database connected";
@@ -45,12 +49,12 @@ void DataStorage::creatDb() {
     } else {
         qDebug() << "QSqlDatabase::"
                  << "Database added";
-        db = QSqlDatabase::addDatabase("QSQLITE");
+        db = QSqlDatabase::addDatabase("QSQLITE", "qt_sql_default_connection");
         // system("IF NOT EXIST \"C:/OwlChat\" MD  \"C:/OwlChat\" ");
-        db.setDatabaseName("C:/IM/test.db");
+        db.setDatabaseName("C:/IM/user" + user + ".db");
         // mklink /J C:\IM D:\@Projects\Qt\IM-Network
-        db.setUserName("admin");
-        db.setPassword("admin");
+        db.setUserName(user);
+        db.setPassword(pwd);
     }
 }
 
@@ -71,12 +75,14 @@ void DataStorage::closeDb() {
 }
 
 void DataStorage::createTable() {
-    QSqlQuery query;
-    query.exec(SQLCREATE_FRIEND);
-    query.exec(SQLCREATE_GP);
-    query.exec(SQLCREATE_MSG);
-    query.exec(SQLCREATE_FR);
-    qDebug() << "create table OK" << endl;
+    execute(SQLCREATE_FRIEND);
+    execute(SQLCREATE_GP);
+    execute(SQLCREATE_MSG);
+    execute(SQLCREATE_FR);
+    execute(SQLCREATE_TRIGGER_MSG);
+    execute(SQLCREATE_TRIGGER_GROUP);
+    qDebug() << "DataStorage"
+             << "create table Done";
 }
 
 // int DataStorage::select(DataResult& res, std::string _sql, int resultNum) {
@@ -114,7 +120,8 @@ int DataStorage::execute(QSqlQuery& query, QString sql) {
         return 0;
     } else {
         QSqlError err = query.lastError();
-        qDebug() << "DataStorage::excute Error:" << err.databaseText() << "; " << err.driverText();
+        qDebug() << "DataStorage::excute Error:" << err.databaseText() << "; " << err.driverText() << endl
+                 << "SQL: " << sql << endl;
         return 1;
     }
 }

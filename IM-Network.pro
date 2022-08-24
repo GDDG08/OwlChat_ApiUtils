@@ -39,11 +39,15 @@ HEADERS  += mainwindow.h \
     ApiUtils/api_utils.h \
     ApiUtils/tools/byte_convert.h \
     ApiUtils/tools/logger.h \
+    ApiUtils/tools/httplib.h \
     ApiUtils/data/data_storage.h \
     ApiUtils/data/data_utils.h \
-    ApiUtils/data/data_struct.h
+    ApiUtils/data/data_struct.h \
+    ApiUtils/http_utils.h
 
 FORMS    += mainwindow.ui
 
 OBJECTS_DIR  = tmp
 MOC_DIR      = tmp
+
+LIBS += -lWs2_32
