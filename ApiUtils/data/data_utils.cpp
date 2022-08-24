@@ -329,7 +329,7 @@ int DataUtils::updateGroupList(QList<D_GroupInfo> list) {
             if (res.size() == 0) {  // no then insert    -
                 char sql1 [1024] = {0};
                 sprintf(sql1, "insert into gp(groupid, groupname, createuser ,avatar, board) values(%d, '%s', '%d', %d, '%s')", 
-                basicinfo.groupID, basicinfo.groupName.toLocal8Bit().data(),basicinfo.adminUser, basicinfo.avatarID, basicinfo.board.toLocal8Bit().data);
+                basicinfo.groupID, basicinfo.groupName.toLocal8Bit().data(),basicinfo.adminUser, basicinfo.avatarID, basicinfo.board.toLocal8Bit().data());
                 return dataStorage->execute(sql1);
             } else {  // have then update
                 char sql1 [1024] = {0};
