@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-23 18:20:00
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 15:54:16
+ * @LastEditTime : 2022-08-24 17:59:18
  */
 #include "data_utils.h"
 
@@ -111,9 +111,9 @@ int DataUtils::updateGroupList(QList<D_GroupInfo> list) {
 }
 
 int DataUtils::getGroupList(QList<D_GroupInfo>& list) {
-    QSqlQuery query;
-    QString sql = QString("SELECT * FROM gp");
-    query.exec(sql);
+    DataResult res;
+    dataStorage->select(res, "SELECT * FROM gp", 5);
+    // qDebug() << "select";
 }
 
 int DataUtils::updateGroupInfo(D_GroupInfo info) {
@@ -137,4 +137,5 @@ int DataUtils::deleteGroup(uint32_t groupID) {
     QString sql = QString("DELETE FROM gp WHERE groupid = '%1'")
                       .arg(QString(groupID));
     query.exec(sql);
+    query.value(0);
 }

@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-22 20:15:38
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-23 03:53:13
+ * @LastEditTime : 2022-08-24 17:56:49
  */
 #include "data_storage.h"
 
@@ -13,23 +13,24 @@ DataStorage::DataStorage(QObject* parent)
     : QObject(parent) {
     qDebug() << QSqlDatabase::drivers();
     creatDb();
-    if(!openDb())
+    if (!openDb())
         return;
     createTable();
-    QSqlQuery query;
-    query.exec("select * from test");
+    // QSqlQuery query;
+    // query.exec("select * from test");
 
-    while (query.next()) {
-        QString userID = query.value("username").toString();
-        qDebug() << userID;
-    }
-
-
+    // while (query.next()) {
+    //     QString userID = query.value("username").toString();
+    //     qDebug() << userID;
+    // }
 
     // struct UserInfo{
     //     int char
     // }
     // QList<UserInfo>
+    // DataResult r;
+    // select(r, "select * from user", 10);
+    // qDebug() << "select";
 }
 
 DataStorage::~DataStorage() {
@@ -69,8 +70,7 @@ void DataStorage::closeDb() {
     db.close();
 }
 
-void DataStorage::createTable()
-{
+void DataStorage::createTable() {
     QSqlQuery query;
     query.exec(SQLCREATE_FRIEND);
     query.exec(SQLCREATE_GP);
@@ -79,17 +79,21 @@ void DataStorage::createTable()
     qDebug() << "create table OK" << endl;
 }
 
-void DataStorage::getFriendList()
-{
+int DataStorage::select(DataResult& res, std::string _sql, int resultNum) {
     QSqlQuery query;
-    query.exec("select * from user");
-    while (query.next()) {
-        QString userID = query.value("username").toString();
-        qDebug() << userID;
+    query.setForwardOnly(true);
+    QString sql = QString::fromStdString(_sql);
+    query.exec(sql);
+    if (!query.isActive()) {
+        return 1;
+    } else {
+        while (query.next()) {
+            std::vector<QVariant> resRow;
+            for (int i = 0; i < resultNum; i++) {
+                resRow.push_back(query.value(i));
+            }
+            res.push_back(resRow);
+        }
+        return 0;
     }
-}
-
-void DataStorage::getGroupList()
-{
-    
 }
