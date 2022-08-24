@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-23 18:20:00
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 22:51:52
+ * @LastEditTime : 2022-08-25 03:06:15
  */
 #include "data_utils.h"
 
@@ -27,11 +27,16 @@ int DataUtils::addMessage(D_Message msg, int GUID) {
     qDebug() << "DataUtils"
              << "addMessage";
 
-    QString sql = QString(
-                      "INSERT INTO msg(msgid, fromuserid, sessionid, sessiontype, msgtype, content, guid)"
-                      "VALUES(%1, '%2', '%3', %4, %5, %6, %7)")
-                      .arg(QString::number(msg.msgID), QString::number(msg.fromID), QString::number(msg.sessionType == 0 ? msg.fromID : msg.sessionID), QString::number(msg.sessionType), QString::number(msg.msg_type), msg.content, QString::number(GUID));
-    return dataStorage->execute(sql);
+    std::string s = "INSERT INTO msg(msgid, fromuserid, sessionid, sessiontype, msgtype, content, guid) VALUES(";
+    QString test = msg.content;
+    std::string a = "1234";
+    s += std::to_string(msg.msgID) + ",'" + std::to_string(msg.fromID) + "','" + std::to_string(msg.sessionType == 0 ? msg.fromID : msg.sessionID) + "'," + std::to_string(msg.msg_type) + ",'" + a + "'," + std::to_string(GUID) + ")";
+
+    // char sql[1024];
+    // sprintf(sql, "INSERT INTO msg(msgid, fromuserid, sessionid, sessiontype, msgtype, content, guid) VALUES(%ld, '%ld', '%d', %d, %d, '%s', %d)",
+    //         msg.msgID, msg.fromID, msg.sessionType == 0 ? msg.fromID : msg.sessionID, msg.sessionType, msg.msg_type, msg.content.toStdString(), GUID);
+
+    return dataStorage->execute(QString::fromStdString(s));
 }
 
 int DataUtils::setMessageID(uint32_t GUID, uint32_t msgID) {
@@ -193,7 +198,7 @@ int DataUtils::updateUserInfo(D_UserBasicInfo info) {
         } else {
             // have then update
             QString sql = QString("update user set avatar = %1, nickname = '%2', status = %3")
-            .arg(QString::number(info.avatarID), info.nickName, QString::number(info.userStatus));
+                              .arg(QString::number(info.avatarID), info.nickName, QString::number(info.userStatus));
             return dataStorage->execute(sql);
         }
 

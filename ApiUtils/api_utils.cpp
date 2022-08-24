@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 22:44:03
+ * @LastEditTime : 2022-08-25 04:07:35
  */
 #include "api_utils.h"
 
@@ -63,7 +63,8 @@ int ApiUtils::sendMessage(uint32_t _sessionID, uint8_t _sessionType, uint64_t _t
         0,
         _msg_type,
         _content};
-    dataUtils->addMessage(msg, guid);
+    // Todo
+    // dataUtils->addMessage(msg, guid);
 
     uint32_t _msg_len = _content.size() + 1;
     Pak_Message* pak = new Pak_Message(this->login_ID, _sessionID, _sessionType, _time, _msg_type, _msg_len, _content);
@@ -307,6 +308,7 @@ void ApiUtils::resultHandle(QByteArray data) {
                      << "fromUser:" << rtn->userID << ", toSession:" << rtn->sessionID << ", msgID:" << rtn->msgID << ", type:" << rtn->msg_type << ", msg:" << content;
 
             D_Message msg = {rtn->userID, rtn->sessionID, rtn->sessionType, rtn->time, rtn->msgID, rtn->msg_type, content};
+            // Todo
             dataUtils->addMessage(msg);
 
             emit recvMessageCallback(rtn->userID, rtn->sessionID, rtn->time, rtn->msgID, rtn->msg_type, content);
@@ -332,7 +334,8 @@ void ApiUtils::resultHandle(QByteArray data) {
                 qDebug() << "FRIEND_LIST-->"
                          << "friendNum:" << rtn->list_len << "frist Friend:" << friend_list.at(0).userID;
 
-                dataUtils->updateFriendList(friend_list);
+                // Todo
+                //  dataUtils->updateFriendList(friend_list);
 
                 emit getFriendListCallback(friend_list);
             }
@@ -344,7 +347,8 @@ void ApiUtils::resultHandle(QByteArray data) {
                 qDebug() << "USER_INFO-->"
                          << "msg:" << TASK_STATUS_MSG[rtn->msg] << ", userID:" << info.userID << ", nickname:" << QString(info.nickName) << ", avatarID:" << info.avatarID;
 
-                dataUtils->updateUserInfo(info);
+                // Todo
+                //  dataUtils->updateUserInfo(info);
 
                 emit getUserInfoCallback(info);
             } else {
@@ -360,7 +364,8 @@ void ApiUtils::resultHandle(QByteArray data) {
                 qDebug() << "USER_DETAIL-->"
                          << "msg:" << TASK_STATUS_MSG[rtn->msg] << ", userID:" << info.userID;
 
-                dataUtils->updateUserDetail(info);
+                // Todo
+                // dataUtils->updateUserDetail(info);
 
                 emit getUserDetailCallback(info);
             } else {
