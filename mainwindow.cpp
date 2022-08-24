@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:50:46
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 14:34:15
+ * @LastEditTime : 2022-08-24 15:57:31
  */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -179,8 +179,8 @@ void MainWindow::on_pushButton_11_clicked() {
 }
 
 void MainWindow::on_pushButton_10_clicked() {
-    //    api->onGroupAdd(1,222222);
-    api->onGroupAdd(1);
+       api->onGroupAdd(1,111111);
+    // api->onGroupAdd(1);
 }
 void MainWindow::on_pushButton_12_clicked() {
 #ifdef HTTP_ENABLE

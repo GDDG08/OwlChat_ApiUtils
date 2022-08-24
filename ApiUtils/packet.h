@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:52:10
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 04:20:11
+ * @LastEditTime : 2022-08-24 16:01:19
  */
 #ifndef PACKAGE_H
 #define PACKAGE_H
@@ -195,11 +195,11 @@ class Pak_GroupCreateRTN : public PacketRTN {
     uint32_t groupID;
 };
 
-class Pak_GroupAdd : public Packet {
+class Pak_GroupAdd : public Pak_Basic {
    public:
     uint32_t clientID;
     uint32_t groupID;
-    Pak_GroupAdd(uint32_t _clientID, uint32_t _groupID);
+    Pak_GroupAdd(uint32_t _userID,uint32_t _clientID, uint32_t _groupID);
 };
 
 #endif  // PACKAGE_H

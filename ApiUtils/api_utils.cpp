@@ -5,10 +5,9 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 13:40:37
+ * @LastEditTime : 2022-08-24 16:02:40
  */
 #include "api_utils.h"
-
 
 ApiUtils::ApiUtils(QObject* parent)
     : QObject(parent) {
@@ -213,7 +212,7 @@ int ApiUtils::onGroupAdd(uint32_t _groupID, int64_t _userID) {
     uint32_t guid = getGUID("onGroupAdd");
     if (_userID == -1)
         _userID = this->login_ID;
-    Pak_GroupAdd* pak = new Pak_GroupAdd(_userID, _groupID);
+    Pak_GroupAdd* pak = new Pak_GroupAdd(this->login_ID, _userID, _groupID);
     pak->GUID = guid;
     strcpy(pak->token, login_token);
     QByteArray* data = new QByteArray((char*)pak, sizeof(*pak));

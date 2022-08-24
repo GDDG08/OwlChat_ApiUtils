@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:52:10
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 04:20:07
+ * @LastEditTime : 2022-08-24 16:01:37
  */
 #include "packet.h"
 
@@ -75,8 +75,7 @@ Pak_GroupCreate::Pak_GroupCreate(uint32_t _userID, QString _groupName)
     this->len = PACKET_SIZE(this);
 }
 
-Pak_GroupAdd::Pak_GroupAdd(uint32_t _clientID, uint32_t _groupID)
-    : clientID(_clientID), groupID(_groupID) {
+Pak_GroupAdd::Pak_GroupAdd(uint32_t _userID,uint32_t _clientID, uint32_t _groupID)
+    : Pak_Basic(_userID, PACKET_TYPE::GROUP_ADD) ,clientID(_clientID), groupID(_groupID) {
     this->len = PACKET_SIZE(this);
-    this->type = PACKET_TYPE::GROUP_ADD;
 }

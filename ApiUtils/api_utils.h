@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 13:41:02
+ * @LastEditTime : 2022-08-24 15:58:41
  */
 #ifndef API_UTILS_H
 #define API_UTILS_H
@@ -20,8 +20,8 @@
 #include <ApiUtils/data/data_utils.h>
 
 #define REMOTE_HOST "127.0.0.1"
-#define REMOTE_PORT_SOCKET 10005
-#define REMOTE_PORT_HTTP 10000
+#define REMOTE_PORT_SOCKET 10000
+#define REMOTE_PORT_HTTP 10002
 
 #define HTTP_ENABLE
 
