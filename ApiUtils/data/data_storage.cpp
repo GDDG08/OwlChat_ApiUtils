@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-22 20:15:38
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 19:49:39
+ * @LastEditTime : 2022-08-24 19:58:54
  */
 #include "data_storage.h"
 
@@ -111,9 +111,10 @@ int DataStorage::execute(QSqlQuery& query, QString sql) {
     bool status = query.exec(sql);
 
     if (status) {
-        return true;
+        return 0;
     } else {
         QSqlError err = query.lastError();
         qDebug() << "DataStorage::excute Error:" << err.databaseText() << "; " << err.driverText();
+        return 1;
     }
 }
