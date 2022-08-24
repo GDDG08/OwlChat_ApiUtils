@@ -117,11 +117,14 @@ int DataUtils::updateUserInfo(D_UserBasicInfo info)
 int DataUtils::getUserInfo(uint32_t userID, D_UserBasicInfo &info)
 {
     QSqlQuery qry;
-    QString sql = QString("")
+    DataResult result;
+    dataStorage->select(result, "select userid, avatar, nickname, status from user where userid = " + std::to_string(userID));
+    
 }
 
 int DataUtils::updateUserDetail(D_UserDetailInfo info)
 {
+
 }
 
 int DataUtils::getUserDetail(uint32_t userID, D_UserDetailInfo& info) {

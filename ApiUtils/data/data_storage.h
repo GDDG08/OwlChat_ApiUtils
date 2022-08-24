@@ -20,7 +20,7 @@
 #include "sql.h"
 #include <vector>
 
-    typedef std::vector<std::vector<QVariant>> DataResult;
+typedef std::vector<std::vector<QVariant>> DataResult;
 class DataStorage : public QObject {
     Q_OBJECT
    public:
