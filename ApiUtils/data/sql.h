@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-24 15:22:36
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 21:39:26
+ * @LastEditTime : 2022-08-24 22:05:06
  */
 #define SQLCREATE_FRIEND \
     "CREATE TABLE user(\
@@ -48,7 +48,7 @@
 );"
 
 #define SQLCREATE_FR \
-"create table fr( \
+    "create table fr( \
     fromuserid varchar(15) NOT NULL, \
     touserid varchar(15) NOT NULL, \
     content text DEFAULT '', \
@@ -62,7 +62,7 @@
             FOR EACH ROW \
                 WHEN new.sessiontype == 0  \
         BEGIN \
-            update user set lastreadmsg = new.content where userid = new.sessionid \
+            update user set lastreadmsg = new.content where userid = new.sessionid; \
         END;"
 
 #define SQLCREATE_TRIGGER_GROUP \

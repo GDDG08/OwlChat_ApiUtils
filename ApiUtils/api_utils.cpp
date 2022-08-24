@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 21:27:25
+ * @LastEditTime : 2022-08-24 22:44:03
  */
 #include "api_utils.h"
 
@@ -109,6 +109,12 @@ int ApiUtils::getUserInfo(uint32_t _userID) {
     qDebug() << "ApiUtils::"
              << "getUserInfo";
     uint32_t guid = getGUID("getUserInfo");
+
+    D_UserBasicInfo info;
+    if (dataUtils->getUserInfo(_userID, info) == 0) {
+        emit getUserInfoCallback(info);
+        return 0;
+    }
 
     Pak_FriendBasic* pak = new Pak_FriendBasic(this->login_ID, _userID, PACKET_TYPE::USER_INFO);
     pak->GUID = guid;
@@ -405,7 +411,7 @@ void ApiUtils::resultHandle(QByteArray data) {
             qDebug() << "FRIEND_RESULT-->"
                      << "userID_client:" << rtn->userID << ", isAccepted:" << rtn->isAccepted;
 
-            dataUtils->changeFriendRequestStatus(rtn->userID, rtn->userID_client, rtn->isAccepted ? FRIEND_REQUEST_STATUS::ACCEPT : REJECT);
+            dataUtils->changeFriendRequestStatus(rtn->userID_client, rtn->userID, rtn->isAccepted ? FRIEND_REQUEST_STATUS::ACCEPT : FRIEND_REQUEST_STATUS::REJECT);
 
             emit onFriendResultCallback(rtn->userID, rtn->isAccepted);
             onFriendResult(rtn->userID);
