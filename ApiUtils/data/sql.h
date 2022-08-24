@@ -9,7 +9,7 @@
     isfriend BOOLEAN CHECK(isfriend IN (0, 1))  DEFAULT 0, \
     signature TEXT DEFAULT '', \
     status int CHECK(status IN (0, 1, 2, 3)) \
-);""
+);"
 
 #define SQLCREATE_GP "create table gp( \
     groupid int PRIMARY KEY, \
