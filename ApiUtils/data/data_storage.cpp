@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-22 20:15:38
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 17:56:49
+ * @LastEditTime : 2022-08-24 19:19:18
  */
 #include "data_storage.h"
 
@@ -83,7 +83,8 @@ int DataStorage::select(DataResult& res, std::string _sql, int resultNum) {
     QSqlQuery query;
     query.setForwardOnly(true);
     QString sql = QString::fromStdString(_sql);
-    query.exec(sql);
+    execute(query, sql);
+
     if (!query.isActive()) {
         return 1;
     } else {
@@ -95,5 +96,22 @@ int DataStorage::select(DataResult& res, std::string _sql, int resultNum) {
             res.push_back(resRow);
         }
         return 0;
+    }
+}
+
+int DataStorage::execute(QString sql) {
+    QSqlQuery query;
+    return execute(query, sql);
+}
+
+int DataStorage::execute(QSqlQuery& query, QString sql) {
+    QSqlQuery query;
+    bool status = query.exec(sql);
+
+    if (status) {
+        return true;
+    } else {
+        QSqlError err = query.lastError();
+        qDebug() << "DataStorage::excute Error:" << err.databaseText() << "; " << err.driverText();
     }
 }
