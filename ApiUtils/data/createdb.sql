@@ -17,12 +17,12 @@ CREATE TABLE user(
 create table gp(
     groupid int PRIMARY KEY,
     groupname varchar(64) DEFAULT '',
-    createuser varchar(15) NOT NULL,
+    createuser varchar(15) DEFAULT '0',
     avatar varchar(256) DEFAULT '',
     board varchar(1024) DEFAULT '',
     lastreadtime TimeStamp DEFAULT (DATETIME('now', 'localtime')),
     lastreadmsg text default '',
-    FOREIGN KEY(createuser) REFERENCES user(userid) ON DELETE CASCADE
+    -- FOREIGN KEY(createuser) REFERENCES user(userid) ON DELETE CASCADE
 );
 
 

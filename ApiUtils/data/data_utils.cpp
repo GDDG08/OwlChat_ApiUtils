@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-23 18:20:00
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 15:24:56
+ * @LastEditTime : 2022-08-24 15:54:16
  */
 #include "data_utils.h"
 
@@ -23,7 +23,7 @@ int DataUtils::addMessage(D_Message msg) {
 
     QString sql = QString(
                       "INSERT INTO msg(fromuserid, sessionid, sessiontype, msgtype, content)"
-                      "VALUES('%1', '%2', %3, %4, %5")
+                      "VALUES('%1', '%2', %3, %4, %5)")
                       .arg(QString(msg.fromID), QString(msg.sessionType == 0 ? msg.fromID : msg.sessionID), QString(msg.sessionType), QString(msg.msg_type), QString(msg.content));
     query.exec(sql);
     return 0;
@@ -112,7 +112,7 @@ int DataUtils::updateGroupList(QList<D_GroupInfo> list) {
 
 int DataUtils::getGroupList(QList<D_GroupInfo>& list) {
     QSqlQuery query;
-    QString sql = QString("SELECT * FROM gp ");
+    QString sql = QString("SELECT * FROM gp");
     query.exec(sql);
 }
 
@@ -126,7 +126,15 @@ int DataUtils::getGroupInfo(uint32_t groupID, D_GroupInfo& info) {
 }
 
 int DataUtils::addGroup(uint32_t groupID) {
+    QSqlQuery query;
+    QString sql = QString("INSERT INTO gp (groupid) VALUES('%1')")
+                      .arg(QString(groupID));
+    query.exec(sql);
 }
 
 int DataUtils::deleteGroup(uint32_t groupID) {
+    QSqlQuery query;
+    QString sql = QString("DELETE FROM gp WHERE groupid = '%1'")
+                      .arg(QString(groupID));
+    query.exec(sql);
 }
