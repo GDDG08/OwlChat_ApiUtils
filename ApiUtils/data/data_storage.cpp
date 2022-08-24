@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-22 20:15:38
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 20:49:38
+ * @LastEditTime : 2022-08-24 21:41:15
  */
 #include "data_storage.h"
 
@@ -15,6 +15,8 @@ DataStorage::DataStorage(QObject* parent)
 
     // Todo Remove
     connectDb(111, "123456");
+    openDb();
+    createTable();
     // QSqlQuery query;
     // query.exec("select * from test");
 
@@ -48,7 +50,7 @@ void DataStorage::connectDb(uint32_t userID, QString pwd) {
                  << "Database added";
         db = QSqlDatabase::addDatabase("QSQLITE", "user" + user);
         // system("IF NOT EXIST \"C:/OwlChat\" MD  \"C:/OwlChat\" ");
-        db.setDatabaseName("C:/IM/" + user + ".db");
+        db.setDatabaseName("C:/IM/123.db");
         // mklink /J C:\IM D:\@Projects\Qt\IM-Network
         db.setUserName(user);
         db.setPassword(pwd);
@@ -72,13 +74,14 @@ void DataStorage::closeDb() {
 }
 
 void DataStorage::createTable() {
-    QSqlQuery query;
-    query.exec(SQLCREATE_FRIEND);
-    query.exec(SQLCREATE_GP);
-    query.exec(SQLCREATE_MSG);
-    query.exec(SQLCREATE_FR);
+    execute(SQLCREATE_FRIEND);
+    execute(SQLCREATE_GP);
+    execute(SQLCREATE_MSG);
+    execute(SQLCREATE_FR);
+    execute(SQLCREATE_TRIGGER_MSG);
+    execute(SQLCREATE_TRIGGER_GROUP);
     qDebug() << "DataStorage"
-             << "create table OK";
+             << "create table Done";
 }
 
 // int DataStorage::select(DataResult& res, std::string _sql, int resultNum) {
