@@ -55,7 +55,7 @@ int DataUtils::getMessages(uint32_t sessionID, uint8_t sessionType, QList<D_Mess
     } else
         return 1;
 }
-
+// need some chage!!
 int DataUtils::getRecentMessageList(QList<D_RecentMsgListItem>& list) {
     qDebug() << "DataUtils"
              << "getRecentMessageList";
@@ -136,20 +136,48 @@ int DataUtils::deleteFriend(uint32_t userID) {
     return dataStorage->execute(sql);
 }
 
-// update 的时候可能已经有??
+// update 
 int DataUtils::updateUserInfo(D_UserBasicInfo info) {
     qDebug() << "DataUtils"
              << "updateUserInfo";
+    QString sql = QString("update user set avatar = %1, nickname = '%2', status = %3").arg(
+        QString(info.avatarID), QString(info.nickName), QString(info.userStatus));
+    return dataStorage->execute(sql);
 }
 
 int DataUtils::getUserInfo(uint32_t userID, D_UserBasicInfo& info) {
     qDebug() << "DataUtils"
              << "getUserInfo";
+    QString sql = QString("select userid, avatar, nickname, status from user where userid = '%1'").arg(QString(userID));
+    DataResult res;
+    if(dataStorage->select(res, sql, 4) == 0){
+        DataRow row = res[0];
+        info.userID = row[0].toUInt();
+        info.avatarID = row[1].toUInt();
+        info.nickName = row[2].toString();
+        info.userStatus = row[3].toUInt();
+        return 0;
+    }
+    return 1;
 }
 
 int DataUtils::updateUserDetail(D_UserDetailInfo info) {
     qDebug() << "DataUtils"
              << "updateUserDetail";
+    DataResult res;
+    QString sql = QString("select userid from user where userid = '%1'").arg(QString(info.userID));
+    if(dataStorage->select(res, sql, 1) == 0){
+        if (res.size() == 0){  // no then insert
+            sql = QString("")
+        }
+    }else{
+        return 1;
+    }
+
+    QString sql = QString("update user set nickname = '%1', gender = %2, age = %3, city = %4, job = %5, avatar = %6, signature = '%7', status = %8").arg(
+        QString(info.nickName), QString(info.gender), QString(info.age), QString(info.city), QString(info.job), 
+        QString(info.avatarID), QString(info.signature),QString(info.userStatus)
+    );
 }
 
 int DataUtils::getUserDetail(uint32_t userID, D_UserDetailInfo& info) {

@@ -27,7 +27,8 @@ create table gp(
 
 
 create table msg(
-    msgid INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    msgid INTEGER,
     fromuserid varchar(15) NOT NULL,
     sessionid varchar(15) NOT NULL,
     sessiontype int CHECK(sessiontype in (0, 1)),
