@@ -23,9 +23,9 @@ int DataUtils::addMessage(D_Message msg) {
              << "addMessage";
 
     QString sql = QString(
-                      "INSERT INTO msg(fromuserid, sessionid, sessiontype, msgtype, content)"
+                      "INSERT INTO msg(msgid, fromuserid, sessionid, sessiontype, msgtype, content)"
                       "VALUES('%1', '%2', %3, %4, %5)")
-                      .arg(QString(msg.fromID), QString(msg.sessionType == 0 ? msg.fromID : msg.sessionID), QString(msg.sessionType), QString(msg.msg_type), QString(msg.content));
+                      .arg(QString(msg.msgID), QString(msg.fromID), QString(msg.sessionType == 0 ? msg.fromID : msg.sessionID), QString(msg.sessionType), QString(msg.msg_type), QString(msg.content));
     return dataStorage->execute(sql);
 }
 
@@ -121,17 +121,31 @@ int DataUtils::changeFriendRequestStatus(uint32_t fromID, uint32_t toID, uint8_t
 int DataUtils::addFriend(uint32_t userID) {
     qDebug() << "DataUtils"
              << "addFriend";
-    // 可能已经有了但还不是friend
-    QString sql = QString("INSERT INTO user (userid, isfriend) VALUES('%1',TRUE)")
-                      .arg(QString(userID));
-    return dataStorage->execute(sql);
+    // 可能已经有了但还不是friend   -------------------已经解决
+    QString sql = QString("select userid from user where userid = '%1'").arg(QString(userID));
+    DataResult res;
+    if(dataStorage->select(res, sql, 1) == 0){
+        if(res.size() == 0){
+            sql = QString("INSERT INTO user (userid, isfriend) VALUES('%1',1)")
+                                .arg(QString(userID));
+            return dataStorage->execute(sql);
+        }
+        else{
+            sql = QString("update user set isfriend = 1 where userid = '%1'").arg(QString(userID));
+            return dataStorage->execute(sql);
+        }
+    }else{
+        return 1;
+    }
+
+    
 }
 
 int DataUtils::deleteFriend(uint32_t userID) {
     qDebug() << "DataUtils"
              << "deleteFriend";
     // 仅仅取消标识
-    QString sql = QString("UPDATE user SET isfriend = FALSE WHERE userid = '%1'")
+    QString sql = QString("UPDATE user SET isfriend = 0 WHERE userid = '%1'")
                       .arg(QString(userID));
     return dataStorage->execute(sql);
 }
@@ -167,17 +181,23 @@ int DataUtils::updateUserDetail(D_UserDetailInfo info) {
     DataResult res;
     QString sql = QString("select userid from user where userid = '%1'").arg(QString(info.userID));
     if(dataStorage->select(res, sql, 1) == 0){
-        if (res.size() == 0){  // no then insert
-            sql = QString("")
+        if (res.size() == 0){  // no then insert    --isfriend default 0 ---is that right?????
+            sql = QString("insert into user(userid, nickname, gender ,age, city, job, avatar, signature, status) \
+             values('%1', '%2', %3, %4, %5, %6, %7, '%8', %9, )").arg(
+                QString(info.userID), QString(info.nickName), QString(info.gender), QString(info.age), QString(info.city), 
+                QString(info.job), QString(info.avatarID), QString(info.signature), QString(info.userStatus));
+            return dataStorage->execute(sql);
+        }
+        else{  // have then update
+            QString sql = QString("update user set nickname = '%1', gender = %2, age = %3, city = %4, job = %5, avatar = %6, signature = '%7', status = %8 where userid = '%9'").arg(
+                    QString(info.nickName), QString(info.gender), QString(info.age), QString(info.city), QString(info.job), 
+                    QString(info.avatarID), QString(info.signature),QString(info.userStatus),QString(info.userID)
+                );
+            return dataStorage->execute(sql);
         }
     }else{
         return 1;
     }
-
-    QString sql = QString("update user set nickname = '%1', gender = %2, age = %3, city = %4, job = %5, avatar = %6, signature = '%7', status = %8").arg(
-        QString(info.nickName), QString(info.gender), QString(info.age), QString(info.city), QString(info.job), 
-        QString(info.avatarID), QString(info.signature),QString(info.userStatus)
-    );
 }
 
 int DataUtils::getUserDetail(uint32_t userID, D_UserDetailInfo& info) {
@@ -205,6 +225,28 @@ int DataUtils::getUserDetail(uint32_t userID, D_UserDetailInfo& info) {
 int DataUtils::updateFriendList(QList<D_UserBasicInfo> list) {
     qDebug() << "DataUtils"
              << "updateFriendList";
+    
+    for(int i = 0; i < list.size();i++){
+        D_UserBasicInfo basicinfo = list[i];
+        QString sql = QString("select userid from user where userid = '%1'").arg(QString(basicinfo.userID));
+        DataResult res;
+        if(dataStorage->select(res, sql, 1) == 0){
+            if (res.size() == 0){  // no then insert    -
+                sql = QString("insert into user(userid, avatar, nickname ,status) values('%1', %2, '%3', %4)").arg(
+                    QString(basicinfo.userID), QString(basicinfo.avatarID), QString(basicinfo.nickName), QString(basicinfo.userStatus));
+                return dataStorage->execute(sql);
+            }
+            else{  // have then update
+                QString sql = QString("update user set nickname = '%1', avatar = %2, status = %3 where userid = '%4'").arg(
+                        QString(basicinfo.nickName), QString(basicinfo.avatarID), QString(basicinfo.userStatus), QString(basicinfo.userID));
+                return dataStorage->execute(sql);
+            }
+        }else{
+            return 1;
+        }
+    }
+   
+    
 }
 
 int DataUtils::getFriendList(QList<D_UserBasicInfo>& list) {
@@ -233,6 +275,26 @@ int DataUtils::getFriendList(QList<D_UserBasicInfo>& list) {
 int DataUtils::updateGroupList(QList<D_GroupInfo> list) {
     qDebug() << "DataUtils"
              << "updateGroupList";
+
+    for(int i = 0; i < list.size();i++){
+        D_GroupInfo basicinfo = list[i];
+        QString sql = QString("select groupid from gp where groupid = %1").arg(QString(basicinfo.groupID));
+        DataResult res;
+        if(dataStorage->select(res, sql, 1) == 0){
+            if (res.size() == 0){  // no then insert    -
+                sql = QString("insert into gp(groupid, groupname, createuser ,avatar, board) values(%1, '%2', '%3', %4, '%5')").arg(
+                    QString(basicinfo.groupID), QString(basicinfo.groupName), QString(basicinfo.adminUser), QString(basicinfo.avatarID), QString(basicinfo.board));
+                return dataStorage->execute(sql);
+            }
+            else{  // have then update
+                QString sql = QString("update gp set groupname = '%1', createuser = '%2', avatar = %3, board = '%4' where groupid = %5").arg(
+                        QString(basicinfo.groupName), QString(basicinfo.adminUser), QString(basicinfo.avatarID), QString(basicinfo.board), QString(basicinfo.groupID));
+                return dataStorage->execute(sql);
+            }
+        }else{
+            return 1;
+        }
+    }
 }
 
 int DataUtils::getGroupList(QList<D_GroupInfo>& list) {
@@ -260,13 +322,31 @@ int DataUtils::getGroupList(QList<D_GroupInfo>& list) {
 int DataUtils::updateGroupInfo(D_GroupInfo info) {
     qDebug() << "DataUtils"
              << "updateGroupInfo";
+    DataResult res;
+    QString sql = QString("select groupid from gp where groupid = %1").arg(QString(info.groupID));
+    if(dataStorage->select(res, sql, 1) == 0){
+        if (res.size() == 0){ 
+            sql = QString("insert into gp(groupid, groupname, createuser ,avatar, board) values(%1, '%2', '%3', %4, '%5')").arg(
+                QString(info.groupID), QString(info.groupName), QString(info.adminUser), QString(info.avatarID), QString(info.board));
+            return dataStorage->execute(sql);
+        }
+        else{  // have then update
+            QString sql = QString("update gp set groupname = '%1', createuser = '%2', avatar = %3, board = '%4' where groupid = %5").arg(
+                    QString(info.groupName), QString(info.adminUser), QString(info.avatarID), QString(info.board), QString(info.groupID));
+            return dataStorage->execute(sql);
+        }
+    }else{
+        return 1;
+    }
+
+
 }
 
 int DataUtils::getGroupInfo(uint32_t groupID, D_GroupInfo& info) {
     qDebug() << "DataUtils"
              << "getGroupInfo";
 
-    QString sql = QString("SELECT * FROM gp WHERE groupid = '%1'").arg(QString(groupID));
+    QString sql = QString("SELECT * FROM gp WHERE groupid = %1").arg(QString(groupID));
     return dataStorage->execute(sql);
 }
 
@@ -274,7 +354,7 @@ int DataUtils::addGroup(uint32_t groupID) {
     qDebug() << "DataUtils"
              << "addGroup";
 
-    QString sql = QString("INSERT INTO gp (groupid) VALUES('%1')")
+    QString sql = QString("INSERT INTO gp (groupid) VALUES(%1)")
                       .arg(QString(groupID));
     return dataStorage->execute(sql);
 }
@@ -283,7 +363,7 @@ int DataUtils::deleteGroup(uint32_t groupID) {
     qDebug() << "DataUtils"
              << "deleteGroup";
 
-    QString sql = QString("DELETE FROM gp WHERE groupid = '%1'")
+    QString sql = QString("DELETE FROM gp WHERE groupid = %1")
                       .arg(QString(groupID));
     return dataStorage->execute(sql);
 }

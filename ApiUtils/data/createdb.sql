@@ -8,7 +8,7 @@ CREATE TABLE user(
     avatar int DEFAULT 0,
     isfriend BOOLEAN CHECK(isfriend IN (0, 1))  DEFAULT 0,
     signature TEXT DEFAULT '',
-    status int CHECK(status IN (0, 1, 2, 3))
+    status int CHECK(status IN (0, 1, 2, 3)) DEFAULT 0,
     lastreadtime TimeStamp DEFAULT (DATETIME('now', 'localtime')),
     lastreadmsg text default '',
 );
@@ -18,7 +18,7 @@ create table gp(
     groupid int PRIMARY KEY,
     groupname varchar(64) DEFAULT '',
     createuser varchar(15) DEFAULT '0',
-    avatar varchar(256) DEFAULT '',
+    avatar int DEFAULT 0,
     board varchar(1024) DEFAULT '',
     lastreadtime TimeStamp DEFAULT (DATETIME('now', 'localtime')),
     lastreadmsg text default '',
