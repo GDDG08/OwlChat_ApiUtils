@@ -167,7 +167,6 @@ int DataUtils::addFriend(uint32_t userID) {
 int DataUtils::deleteFriend(uint32_t userID) {
     qDebug() << "DataUtils"
              << "deleteFriend";
-    // ??????????
     QString sql = QString("UPDATE user SET isfriend = 0 WHERE userid = '%1'")
                       .arg(QString::number(userID));
     return dataStorage->execute(sql);
