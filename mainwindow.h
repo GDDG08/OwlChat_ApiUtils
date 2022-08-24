@@ -56,6 +56,10 @@ class MainWindow : public QMainWindow {
 
     void on_pushButton_10_clicked();
 
+    void on_pushButton_12_clicked();
+
+    void on_pushButton_13_clicked();
+
 private:
     Ui::MainWindow* ui;
     ApiUtils* api;

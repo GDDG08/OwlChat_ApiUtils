@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:50:46
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-23 10:46:43
+ * @LastEditTime : 2022-08-24 14:34:15
  */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -35,6 +35,7 @@ MainWindow::~MainWindow() {
 }
 
 #define USER_2
+
 // DEMO
 void MainWindow::on_pushButton_clicked() {
 #ifdef USER_1
@@ -165,8 +166,7 @@ void MainWindow::on_pushButton_8_clicked() {
 #endif
 }
 
-void MainWindow::on_pushButton_9_clicked()
-{
+void MainWindow::on_pushButton_9_clicked() {
 #ifdef USER_1
     api->getUserDetail(111111);
 #else
@@ -174,13 +174,24 @@ void MainWindow::on_pushButton_9_clicked()
 #endif
 }
 
-void MainWindow::on_pushButton_11_clicked()
-{
+void MainWindow::on_pushButton_11_clicked() {
     api->onGroupCreate("JB");
 }
 
-void MainWindow::on_pushButton_10_clicked()
-{
-//    api->onGroupAdd(1,222222);
+void MainWindow::on_pushButton_10_clicked() {
+    //    api->onGroupAdd(1,222222);
     api->onGroupAdd(1);
+}
+void MainWindow::on_pushButton_12_clicked() {
+#ifdef HTTP_ENABLE
+    // api->onSendFile("C:/IM/mainwindow.h");
+    api->onSendFile("D:/A.mp4");
+    // api->onSendFile("D:/Download/Video/观看 Top Gun- Maverick 完整电影在线免费.mp4");
+#endif
+}
+
+void MainWindow::on_pushButton_13_clicked() {
+#ifdef HTTP_ENABLE
+    api->onDownFile(5, "D:/123/");
+#endif
 }

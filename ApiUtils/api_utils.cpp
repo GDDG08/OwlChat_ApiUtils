@@ -5,16 +5,20 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 04:26:14
+ * @LastEditTime : 2022-08-24 13:40:37
  */
 #include "api_utils.h"
+
 
 ApiUtils::ApiUtils(QObject* parent)
     : QObject(parent) {
     dataUtils = new DataUtils(this);
 
     // Todo: enable network
-    socketUtils = new SocketUtils(this);
+    socketUtils = new SocketUtils(this, REMOTE_HOST, REMOTE_PORT_SOCKET);
+#ifdef HTTP_ENABLE
+    httpUtils = new HttpClientHelper(REMOTE_HOST, REMOTE_PORT_HTTP);
+#endif
     connect(socketUtils, SIGNAL(dataReceived(QByteArray)), this, SLOT(resultHandle(QByteArray)), Qt::QueuedConnection);
 }
 
@@ -202,6 +206,7 @@ int ApiUtils::onGroupCreate(QString _groupName) {
     socketUtils->sendData(*data);
     return 0;
 }
+
 int ApiUtils::onGroupAdd(uint32_t _groupID, int64_t _userID) {
     qDebug() << "ApiUtils::"
              << "onGroupAdd";
@@ -216,6 +221,26 @@ int ApiUtils::onGroupAdd(uint32_t _groupID, int64_t _userID) {
     socketUtils->sendData(*data);
     return 0;
 }
+#ifdef HTTP_ENABLE
+int ApiUtils::onSendFile(QString filePath) {
+    qDebug() << "ApiUtils::"
+             << "onSendFile";
+    int msgID;
+    bool ret = httpUtils->sendFileToServer(msgID, filePath.toStdString());
+    qDebug() << "client send test return : " << ret << " with msgid : " << msgID << endl;
+    return 0;
+}
+
+int ApiUtils::onDownFile(int _msgID, QString _filePath) {
+    qDebug() << "ApiUtils::"
+             << "onDownFile";
+    int msgID;
+    std::string filePath = _filePath.toStdString();
+    bool ret = httpUtils->askFileFromServer(_msgID, filePath);
+    qDebug() << "client send test return : " << ret << " with filePath : " << QString::fromStdString(filePath) << endl;
+    return 0;
+}
+#endif
 
 uint32_t ApiUtils::getGUID(QString tag) {
     return 111111112;
