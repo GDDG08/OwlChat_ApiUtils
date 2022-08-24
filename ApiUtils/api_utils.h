@@ -40,6 +40,12 @@ const QString TASK_STATUS_MSG[]{
     "USER_EXISTED_ERROR",
     "ERROR"};
 
+enum FRIEND_REQUEST_STATUS {
+    SEND = 1u,
+    ARRIVE,
+    ACCEPT,
+    REJECT
+};
 class ApiUtils : public QObject {
     Q_OBJECT
 
