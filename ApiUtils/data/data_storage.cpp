@@ -5,17 +5,16 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-22 20:15:38
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 19:58:54
+ * @LastEditTime : 2022-08-24 20:49:38
  */
 #include "data_storage.h"
 
 DataStorage::DataStorage(QObject* parent)
     : QObject(parent) {
     qDebug() << QSqlDatabase::drivers();
-    creatDb();
-    if (!openDb())
-        return;
-    createTable();
+
+    // Todo Remove
+    connectDb(111, "123456");
     // QSqlQuery query;
     // query.exec("select * from test");
 
@@ -37,20 +36,22 @@ DataStorage::~DataStorage() {
     closeDb();
 }
 
-void DataStorage::creatDb() {
-    if (QSqlDatabase::contains("qt_sql_default_connection")) {
+void DataStorage::connectDb(uint32_t userID, QString pwd) {
+    QString user = QString(userID);
+
+    if (QSqlDatabase::contains("user" + user)) {
         qDebug() << "QSqlDatabase::"
                  << "Database connected";
-        db = QSqlDatabase::database("qt_sql_default_connection");
+        db = QSqlDatabase::database("user" + user);
     } else {
         qDebug() << "QSqlDatabase::"
                  << "Database added";
-        db = QSqlDatabase::addDatabase("QSQLITE");
+        db = QSqlDatabase::addDatabase("QSQLITE", "user" + user);
         // system("IF NOT EXIST \"C:/OwlChat\" MD  \"C:/OwlChat\" ");
-        db.setDatabaseName("C:/IM/test.db");
+        db.setDatabaseName("C:/IM/" + user + ".db");
         // mklink /J C:\IM D:\@Projects\Qt\IM-Network
-        db.setUserName("admin");
-        db.setPassword("admin");
+        db.setUserName(user);
+        db.setPassword(pwd);
     }
 }
 
@@ -76,7 +77,8 @@ void DataStorage::createTable() {
     query.exec(SQLCREATE_GP);
     query.exec(SQLCREATE_MSG);
     query.exec(SQLCREATE_FR);
-    qDebug() << "create table OK" << endl;
+    qDebug() << "DataStorage"
+             << "create table OK";
 }
 
 // int DataStorage::select(DataResult& res, std::string _sql, int resultNum) {

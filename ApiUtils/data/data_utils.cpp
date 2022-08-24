@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-23 18:20:00
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 19:47:06
+ * @LastEditTime : 2022-08-24 21:22:23
  */
 #include "data_utils.h"
 
@@ -15,17 +15,31 @@ DataUtils::DataUtils(QObject* parent)
 }
 
 // init database
-int DataUtils::onLogin(uint32_t userID) {
+int DataUtils::onLogin(uint32_t userID, QString pwd) {
+    qDebug() << "DataUtils"
+             << "onLogin";
+    dataStorage->connectDb(userID, pwd);
+    dataStorage->openDb();
+    dataStorage->createTable();
 }
 
-int DataUtils::addMessage(D_Message msg) {
+int DataUtils::addMessage(D_Message msg, int GUID) {
     qDebug() << "DataUtils"
              << "addMessage";
 
     QString sql = QString(
-                      "INSERT INTO msg(fromuserid, sessionid, sessiontype, msgtype, content)"
-                      "VALUES('%1', '%2', %3, %4, %5)")
-                      .arg(QString(msg.fromID), QString(msg.sessionType == 0 ? msg.fromID : msg.sessionID), QString(msg.sessionType), QString(msg.msg_type), QString(msg.content));
+                      "INSERT INTO msg(msgid, fromuserid, sessionid, sessiontype, msgtype, content, guid)"
+                      "VALUES(%1, '%2', '%3', %4, %5, %6, %7)")
+                      .arg(QString(msg.msgID), QString(msg.fromID), QString(msg.sessionType == 0 ? msg.fromID : msg.sessionID), QString(msg.sessionType), QString(msg.msg_type), QString(msg.content), QString(GUID));
+    return dataStorage->execute(sql);
+}
+
+int DataUtils::setMessageID(uint32_t GUID, uint32_t msgID) {
+    qDebug() << "DataUtils"
+             << "setMessageID";
+
+    QString sql = QString("UPDATE msg SET msgid = %1,guid = -1 WHERE guid = %2")
+                      .arg(QString(msgID), QString(GUID));
     return dataStorage->execute(sql);
 }
 
@@ -100,12 +114,12 @@ int DataUtils::getRecentMessageList(QList<D_RecentMsgListItem>& list) {
 }
 
 // FRIEND
-int DataUtils::addFriendRequest(uint32_t fromID, uint32_t toID, QString verify_msg) {
+int DataUtils::addFriendRequest(uint32_t fromID, uint32_t toID, QString verify_msg, uint8_t status) {
     qDebug() << "DataUtils"
              << "addFriendRequest";
 
     QString sql = QString("INSERT INTO fr (fromuserid,touserid,content,status) VALUES('%1','%2','%3',%4)")
-                      .arg(QString(fromID), QString(toID), verify_msg, QString(1));
+                      .arg(QString(fromID), QString(toID), verify_msg, QString(status));
     return dataStorage->execute(sql);
 }
 
@@ -116,6 +130,29 @@ int DataUtils::changeFriendRequestStatus(uint32_t fromID, uint32_t toID, uint8_t
     QString sql = QString("UPDATE fr SET status = %1 WHERE fromuserid = %2 AND touserid = %3")
                       .arg(QString(status), QString(fromID), QString(toID));
     return dataStorage->execute(sql);
+}
+
+int DataUtils::getFriendRequestList(QList<D_FriendRequest>& list) {
+    qDebug() << "DataUtils"
+             << "getFriendRequestList";
+
+    DataResult res;
+    if (dataStorage->select(res, "SELECT * FROM fr", 5) == 0) {
+        for (int i = 0; i < res.size(); i++) {
+            DataRow row = res[i];
+            D_FriendRequest info;
+            for (int j = 0; j < row.size(); j++) {
+                info.fromID = row[0].toUInt();
+                info.toID = row[1].toUInt();
+                info.verify_msg = row[2].toString();
+                info.status = row[3].toUInt();
+                info.timeStamp = row[4].toULongLong();
+            }
+            list.push_back(info);
+        }
+        return 0;
+    } else
+        return 1;
 }
 
 int DataUtils::addFriend(uint32_t userID) {
@@ -239,7 +276,18 @@ int DataUtils::getGroupInfo(uint32_t groupID, D_GroupInfo& info) {
              << "getGroupInfo";
 
     QString sql = QString("SELECT * FROM gp WHERE groupid = '%1'").arg(QString(groupID));
-    return dataStorage->execute(sql);
+
+    DataResult res;
+    if (dataStorage->select(res, sql, 5) == 0) {
+        DataRow row = res[0];
+        info.groupID = row[0].toUInt();
+        info.groupName = row[1].toString();
+        info.adminUser = row[2].toUInt();
+        info.avatarID = row[3].toUInt();
+        info.board = row[4].toString();
+        return 0;
+    } else
+        return 1;
 }
 
 int DataUtils::addGroup(uint32_t groupID) {

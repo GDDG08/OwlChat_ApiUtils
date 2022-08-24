@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-22 20:15:38
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 19:49:44
+ * @LastEditTime : 2022-08-24 20:44:23
  */
 #ifndef DATA_STORAGE_H
 #define DATA_STORAGE_H
@@ -37,9 +37,9 @@ class DataStorage : public QObject {
     int execute(QString sql);
     int execute(QSqlQuery& query, QString sql);
 
-   private:
+   public:
     QSqlDatabase db;
-    void creatDb();
+    void connectDb(uint32_t userID, QString pwd);
     bool openDb();
     void closeDb();
     void createTable();

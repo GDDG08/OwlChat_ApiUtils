@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 02:49:32
+ * @LastEditTime : 2022-08-24 21:03:57
  */
 #ifndef API_UTILS_H
 #define API_UTILS_H
@@ -33,6 +33,12 @@ const QString TASK_STATUS_MSG[]{
     "USER_EXISTED_ERROR",
     "ERROR"};
 
+enum FRIEND_REQUEST_STATUS {
+    SEND = 1u,
+    ARRIVE,
+    ACCEPT,
+    REJECT
+};
 class ApiUtils : public QObject {
     Q_OBJECT
 
