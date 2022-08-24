@@ -14,7 +14,7 @@ DataStorage::DataStorage(QObject* parent)
     qDebug() << QSqlDatabase::drivers();
 
     // Todo Remove
-    // connectDb(111, "123456");
+    // connectDb(222, "123456");
     // openDb();
     // createTable();
     // QSqlQuery query;
