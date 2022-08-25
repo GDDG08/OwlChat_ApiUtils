@@ -1,17 +1,15 @@
 /*
  * @Project      :
- * @FilePath     : \IM-Network\ApiUtils\data\data_utils.cpp
+ * @FilePath     : \IM-Network2\ApiUtils\data\data_utils.cpp
  * @Descripttion :
  * @Author       : GDDG08
  * @Date         : 2022-08-23 18:20:00
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-25 03:06:15
+ * @LastEditTime : 2022-08-25 10:31:37
  */
 #include "data_utils.h"
 
-
-char * QString2Char(QString item)
-{
+char* QString2Char(QString item) {
     return (char*)item.toStdString().c_str();
 }
 
@@ -29,12 +27,11 @@ int DataUtils::onLogin(uint32_t userID, QString pwd) {
     dataStorage->createTable();
 }
 
-
 // ==============================debug OK
 int DataUtils::addMessage(D_Message msg, QString content, int GUID) {
     qDebug() << "DataUtils"
              << "addMessage";
-    
+
     // sprintf(sql, "INSERT INTO msg(msgid, fromuserid, sessionid, sessiontype, msgtype, content, guid)")
     QString sql = QString(
                       "INSERT INTO msg(msgid, fromuserid, sessionid, sessiontype, msgtype, content, guid)"
@@ -43,12 +40,11 @@ int DataUtils::addMessage(D_Message msg, QString content, int GUID) {
     return dataStorage->execute(sql);
 }
 
-
 int DataUtils::setMessageID(uint32_t GUID, uint32_t msgID) {
     qDebug() << "DataUtils"
              << "setMessageID";
 
-    char sql[1024] = {0}; 
+    char sql[1024] = {0};
     sprintf(sql, "UPDATE msg SET msgid = %d,guid = -1 WHERE guid = %d", msgID, GUID);
     return dataStorage->execute(sql);
 }
@@ -129,16 +125,16 @@ int DataUtils::addFriendRequest(uint32_t fromID, uint32_t toID, QString verify_m
     qDebug() << "DataUtils"
              << "addFriendRequest";
 
-    char sql [1024] = {0};
+    char sql[1024] = {0};
     sprintf(sql, "INSERT INTO fr (fromuserid,touserid,content,status) VALUES('%d','%d','%s',%d)",
-    fromID, toID, verify_msg.toLocal8Bit().data(), status);
+            fromID, toID, verify_msg.toLocal8Bit().data(), status);
     return dataStorage->execute(sql);
 }
 
 int DataUtils::changeFriendRequestStatus(uint32_t fromID, uint32_t toID, uint8_t status) {
     qDebug() << "DataUtils"
              << "changeFriendRequestStatus";
-    char sql [1024] = {0};
+    char sql[1024] = {0};
     sprintf(sql, "update fr set status = %d where fromuerid = '%d' and touserid = '%d'", status, fromID, toID);
     return dataStorage->execute(sql);
 }
@@ -190,10 +186,9 @@ int DataUtils::updateUserInfo(D_UserBasicInfo info) {
     QString sql = QString("select userid from user where userid = '%1'").arg(QString::number(info.userID));
     if (dataStorage->select(res, sql, 1) == 0) {
         if (res.size() == 0) {
-
             char sql1[1024] = {0};
-            sprintf(sql1, "insert into user(userid, nickname, avatar,status) values('%d', '%s', %d, %d)", 
-            info.userID, info.nickName.toLocal8Bit().data(), info.avatarID, info.userStatus);
+            sprintf(sql1, "insert into user(userid, nickname, avatar,status) values('%d', '%s', %d, %d)",
+                    info.userID, info.nickName.toLocal8Bit().data(), info.avatarID, info.userStatus);
             return dataStorage->execute(sql1);
 
         } else {
@@ -232,16 +227,16 @@ int DataUtils::updateUserDetail(D_UserDetailInfo info) {
     DataResult res;
     QString sql = QString("select userid from user where userid = '%1'").arg(QString::number(info.userID));
     if (dataStorage->select(res, sql, 1) == 0) {
-        if (res.size() == 0) { 
+        if (res.size() == 0) {
             char sql1[1024] = {0};
             sprintf(sql1, "insert into user(userid, nickname, gender ,age, city, job, avatar, signature, status) values('%d', '%s', %d, %d, %d, %d, %d, '%s', %d)",
-            info.userID, info.nickName.toLocal8Bit().data(),info.gender, info.age, info.city,
-                         info.job, info.avatarID, info.signature.toLocal8Bit().data(), info.userStatus);
+                    info.userID, info.nickName.toLocal8Bit().data(), info.gender, info.age, info.city,
+                    info.job, info.avatarID, info.signature.toLocal8Bit().data(), info.userStatus);
             return dataStorage->execute(sql1);
         } else {  // have then update
             char sql1[1024] = {0};
             sprintf(sql1, "update user set nickname = '%s', gender = %d, age = %d, city = %d, job = %d, avatar = %d, signature = '%s', status = %d where userid = '%d'",
-            info.nickName.toLocal8Bit().data(), info.gender, info.age, info.city, info.job, info.avatarID, info.signature.toLocal8Bit().data(), info.userStatus, info.userID);
+                    info.nickName.toLocal8Bit().data(), info.gender, info.age, info.city, info.job, info.avatarID, info.signature.toLocal8Bit().data(), info.userStatus, info.userID);
             return dataStorage->execute(sql1);
         }
     } else {
@@ -279,15 +274,15 @@ int DataUtils::updateFriendList(QList<D_UserBasicInfo> list) {
         QString sql = QString("select userid from user where userid = '%1'").arg(QString::number(basicinfo.userID));
         DataResult res;
         if (dataStorage->select(res, sql, 1) == 0) {
-            if (res.size() == 0) {  // no then insert  
-                char sql1 [1024] = {0};
-                sprintf(sql1, "insert into user(userid, avatar, nickname ,status) values('%d', %d, '%s', %d)", 
-                basicinfo.userID, basicinfo.avatarID, basicinfo.nickName.toLocal8Bit().data(), basicinfo.userStatus);
+            if (res.size() == 0) {  // no then insert
+                char sql1[1024] = {0};
+                sprintf(sql1, "insert into user(userid, avatar, nickname ,status) values('%d', %d, '%s', %d)",
+                        basicinfo.userID, basicinfo.avatarID, basicinfo.nickName.toLocal8Bit().data(), basicinfo.userStatus);
                 return dataStorage->execute(sql1);
             } else {  // have then update
-                char sql1[1024] = {0}; 
-                sprintf(sql1, "update user set nickname = '%s', avatar = %d, status = %d where userid = '%d'", 
-                basicinfo.nickName.toLocal8Bit().data(), basicinfo.avatarID, basicinfo.userStatus, basicinfo.userID);
+                char sql1[1024] = {0};
+                sprintf(sql1, "update user set nickname = '%s', avatar = %d, status = %d where userid = '%d'",
+                        basicinfo.nickName.toLocal8Bit().data(), basicinfo.avatarID, basicinfo.userStatus, basicinfo.userID);
                 return dataStorage->execute(sql1);
             }
         } else {
@@ -319,24 +314,24 @@ int DataUtils::getFriendList(QList<D_UserBasicInfo>& list) {
 }
 
 // GROUP
-int DataUtils::updateGroupList(QList<D_GroupInfo> list) {
+int DataUtils::updateGroupList(QList<D_GroupBasicInfo> list) {
     qDebug() << "DataUtils"
              << "updateGroupList";
 
     for (int i = 0; i < list.size(); i++) {
-        D_GroupInfo basicinfo = list[i];
+        D_GroupBasicInfo basicinfo = list[i];
         QString sql = QString("select groupid from gp where groupid = %1").arg(QString(basicinfo.groupID));
         DataResult res;
         if (dataStorage->select(res, sql, 1) == 0) {
             if (res.size() == 0) {  // no then insert    -
-                char sql1 [1024] = {0};
-                sprintf(sql1, "insert into gp(groupid, groupname, createuser ,avatar, board) values(%d, '%s', '%d', %d, '%s')", 
-                basicinfo.groupID, basicinfo.groupName.toLocal8Bit().data(),basicinfo.adminUser, basicinfo.avatarID, basicinfo.board.toLocal8Bit().data());
+                char sql1[1024] = {0};
+                sprintf(sql1, "insert into gp(groupid, groupname, avatar) values(%d, '%s', %d )",
+                        basicinfo.groupID, basicinfo.nickName.toLocal8Bit().data(), basicinfo.adminUser, basicinfo.avatarID, basicinfo.board.toLocal8Bit().data());
                 return dataStorage->execute(sql1);
             } else {  // have then update
-                char sql1 [1024] = {0};
-                sprintf(sql1, "update gp set groupname = '%s', createuser = '%d', avatar = %d, board = '%s' where groupid = %d", 
-                basicinfo.groupName.toLocal8Bit().data(), basicinfo.adminUser, basicinfo.board.toLocal8Bit().data(), basicinfo.groupID);
+                char sql1[1024] = {0};
+                sprintf(sql1, "update gp set groupname = '%s',  avatar = %d where groupid = %d",
+                        basicinfo.groupName.toLocal8Bit().data(), basicinfo.avatarID, basicinfo.groupID);
                 return dataStorage->execute(sql1);
             }
         } else {
@@ -344,7 +339,6 @@ int DataUtils::updateGroupList(QList<D_GroupInfo> list) {
         }
     }
 }
-
 
 int DataUtils::getGroupList(QList<D_GroupInfo>& list) {
     qDebug() << "DataUtils"
@@ -374,22 +368,21 @@ int DataUtils::updateGroupInfo(D_GroupInfo info) {
     QString sql = QString("select groupid from gp where groupid = %1").arg(QString::number(info.groupID));
     DataResult res;
     if (dataStorage->select(res, sql, 1) == 0) {
-        if (res.size() == 0) {  // no then insert    
+        if (res.size() == 0) {  // no then insert
             char sql1[1024] = {0};
-            sprintf(sql1, "insert into gp(groupid, groupname, createuser ,avatar, board) values(%d, '%s', '%d', %d, '%s')", 
-            info.groupID, info.groupName.toLocal8Bit().data(), info.adminUser, info.avatarID, info.board.toLocal8Bit().data());
+            sprintf(sql1, "insert into gp(groupid, groupname, createuser ,avatar, board) values(%d, '%s', '%d', %d, '%s')",
+                    info.groupID, info.groupName.toLocal8Bit().data(), info.adminUser, info.avatarID, info.board.toLocal8Bit().data());
             return dataStorage->execute(QString(sql1));
         } else {  // have then update
-            char sql1 [1024] = {0};
+            char sql1[1024] = {0};
             sprintf(sql1, "update gp set groupname = '%s', createuser = '%d', avatar = %d, board = '%s' where groupid = %d",
-            info.groupName.toLocal8Bit().data(), info.adminUser, info.avatarID, info.board.toLocal8Bit().data(), info.groupID);
+                    info.groupName.toLocal8Bit().data(), info.adminUser, info.avatarID, info.board.toLocal8Bit().data(), info.groupID);
             return dataStorage->execute(QString(sql1));
         }
     } else {
         return 1;
     }
 }
-    
 
 int DataUtils::getGroupInfo(uint32_t groupID, D_GroupInfo& info) {
     qDebug() << "DataUtils"

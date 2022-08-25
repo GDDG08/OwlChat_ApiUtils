@@ -1,11 +1,11 @@
 /*
  * @Project      :
- * @FilePath     : \IM-Network\ApiUtils\api_utils.cpp
+ * @FilePath     : \IM-Network2\ApiUtils\api_utils.cpp
  * @Descripttion :
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-25 08:00:54
+ * @LastEditTime : 2022-08-25 10:51:58
  */
 #include "api_utils.h"
 
@@ -57,7 +57,7 @@ int ApiUtils::sendMessage(uint32_t _sessionID, uint8_t _sessionType, uint64_t _t
     uint32_t guid = getGUID("msg");
     D_Message msg = {this->login_ID, _sessionID, _sessionType, _time, 0, _msg_type, _content};
     // Todo
-    // dataUtils->addMessage(msg, guid);
+    dataUtils->addMessage(msg, _content, guid);
 
     uint32_t _msg_len = _content.size() + 1;
     Pak_Message* pak = new Pak_Message(this->login_ID, _sessionID, _sessionType, _time, _msg_type, _msg_len, _content);
@@ -272,7 +272,9 @@ int ApiUtils::onSendFile(uint32_t _sessionID, uint8_t _sessionType, uint64_t _ti
     int msgID;
     bool ret = httpUtils->sendFileToServer(msgID, filePath.toStdString());
     qDebug() << "client send test return : " << ret << " with msgid : " << msgID << endl;
-    sendMessage(_sessionID, _sessionType, _time, MSG_TYPE::M_FILE, QString::number(msgID));
+
+    QStringList file = filePath.split("/");
+    sendMessage(_sessionID, _sessionType, _time, MSG_TYPE::M_FILE, QString::number(msgID) + "|" + file.last());
     return 0;
 }
 
@@ -347,7 +349,7 @@ void ApiUtils::resultHandle(QByteArray data) {
             qDebug() << "SEND_MESSAGE-->"
                      << "msg:" << pak->msg << ", msgID:" << rtn->msgID;
 
-            // dataUtils->setMessageID(rtn->GUID, rtn->msgID);
+            dataUtils->setMessageID(rtn->GUID, rtn->msgID);
 
             emit sendMessageCallback(pak->msg, rtn->msgID);
         } break;
@@ -362,7 +364,7 @@ void ApiUtils::resultHandle(QByteArray data) {
 
             D_Message msg = {rtn->userID, rtn->sessionID, rtn->sessionType, rtn->time, rtn->msgID, rtn->msg_type, content};
             // Todo
-            // dataUtils->addMessage(msg);
+            dataUtils->addMessage(msg, content);
 
             emit recvMessageCallback(rtn->userID, rtn->sessionID, rtn->time, rtn->msgID, rtn->msg_type, content);
             onRecvMessage(rtn->msgID);
@@ -402,7 +404,7 @@ void ApiUtils::resultHandle(QByteArray data) {
                          << "msg:" << TASK_STATUS_MSG[rtn->msg] << ", userID:" << info.userID << ", nickname:" << QString(info.nickName) << ", avatarID:" << info.avatarID;
 
                 // Todo
-                //  dataUtils->updateUserInfo(info);
+                dataUtils->updateUserInfo(info);
 
                 emit getUserInfoCallback(info);
             } else {
@@ -419,7 +421,7 @@ void ApiUtils::resultHandle(QByteArray data) {
                          << "msg:" << TASK_STATUS_MSG[rtn->msg] << ", userID:" << info.userID;
 
                 // Todo
-                // dataUtils->updateUserDetail(info);
+                dataUtils->updateUserDetail(info);
 
                 emit getUserDetailCallback(info);
             } else {
@@ -509,7 +511,7 @@ void ApiUtils::resultHandle(QByteArray data) {
                          << "groupNum:" << rtn->list_len << "frist Group:" << group_list.at(0).groupID;
 
                 // Todo
-                //  dataUtils->updateGroupList(group_list);
+                dataUtils->updateGroupList(group_list);
 
                 emit getGroupListCallback(group_list);
             }

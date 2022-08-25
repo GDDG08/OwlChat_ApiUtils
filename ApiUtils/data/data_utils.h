@@ -1,11 +1,11 @@
 /*
  * @Project      :
- * @FilePath     : \IM-Network\ApiUtils\data\data_utils.h
+ * @FilePath     : \IM-Network2\ApiUtils\data\data_utils.h
  * @Descripttion :
  * @Author       : GDDG08
  * @Date         : 2022-08-23 18:20:00
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 20:59:41
+ * @LastEditTime : 2022-08-25 10:28:19
  */
 #ifndef DATA_UTILS_H
 #define DATA_UTILS_H
@@ -38,7 +38,7 @@ class DataUtils : public QObject {
     int getUserDetail(uint32_t userID, D_UserDetailInfo& info);
     int updateFriendList(QList<D_UserBasicInfo> list);
     int getFriendList(QList<D_UserBasicInfo>& list);
-    int updateGroupList(QList<D_GroupInfo> list);
+    int updateGroupList(QList<D_GroupBasicInfo> list);
     int getGroupList(QList<D_GroupInfo>& list);
     int updateGroupInfo(D_GroupInfo info);
     int getGroupInfo(uint32_t groupID, D_GroupInfo& info);

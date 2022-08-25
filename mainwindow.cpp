@@ -1,11 +1,11 @@
 /*
  * @Project      :
- * @FilePath     : \IM-Network\mainwindow.cpp
+ * @FilePath     : \IM-Network2\mainwindow.cpp
  * @Descripttion :
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:50:46
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-25 09:39:51
+ * @LastEditTime : 2022-08-25 10:04:12
  */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -34,7 +34,7 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
-#define USER_1
+#define USER_2
 
 // DEMO
 void MainWindow::on_pushButton_clicked() {
