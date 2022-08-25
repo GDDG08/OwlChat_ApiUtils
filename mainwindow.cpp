@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:50:46
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-25 09:11:18
+ * @LastEditTime : 2022-08-25 11:19:36
  */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -34,7 +34,7 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
-#define USER_2
+#define USER_1
 
 // DEMO
 void MainWindow::on_pushButton_clicked() {
@@ -43,17 +43,17 @@ void MainWindow::on_pushButton_clicked() {
     api->onLogin(111111, "123456&dsw!");
 #else
     // api->onLogin(3333333, "123456&dsw!");
-    api->onLogin(333, "123456&dsw!");
+    api->onLogin(222222, "123456&dsw!");
 #endif
 }
 // DEMO
 void MainWindow::on_pushButton_2_clicked() {
 #ifdef USER_1
-    // api->onRegister(111111, "123456&dsw!", "lyh", 1u, 20u, 8u, 8u);
-    api->onRegister(3333333, "123456&dsw!", "lyh", 1u, 20u, 8u, 8u);
+    api->onRegister(111111, "123456&dsw!", "lyh", 1u, 20u, 8u, 8u);
+    // api->onRegister(3333333, "123456&dsw!", "lyh", 1u, 20u, 8u, 8u);
     // api->onRegister(11, "11", "lyh2", 1u, 20u, 8u, 8u);
 #else
-    api->onRegister(333, "123456&dsw!", "GDDG08", 1u, 20u, 8u, 8u);
+    api->onRegister(222222, "123456&dsw!", "GDDG08", 1u, 20u, 8u, 8u);
 #endif
 }
 // DEMO
@@ -70,7 +70,7 @@ void MainWindow::on_pushButton_4_clicked() {
 }
 void MainWindow::on_pushButton_5_clicked() {
 #ifdef USER_1
-    api->onFriendAdd(3333333, "love from China");
+    api->onFriendAdd(222222, "love from China");
     // api->onFriendAdd(222222, "love from China");
 #else
     api->onFriendAdd(111111, "love from America");
@@ -194,14 +194,14 @@ void MainWindow::on_pushButton_10_clicked() {
 void MainWindow::on_pushButton_12_clicked() {
 #ifdef HTTP_ENABLE
     // api->onSendFile("C:/IM/mainwindow.h");
-    api->onSendFile(111111, SESSION_TYPE::S_FRIEND, 0, "C:/IM/readme.txt");
+    api->onSendFile(111111, SESSION_TYPE::S_FRIEND, 0, "C:/IM/test.jpg");
     // api->onSendFile("D:/Download/Video/观看 Top Gun- Maverick 完整电影在线免费.mp4");
 #endif
 }
 
 void MainWindow::on_pushButton_13_clicked() {
 #ifdef HTTP_ENABLE
-    api->onDownFile(5, "D:/123/");
+    api->onDownFile(6, "C:/IM/");
 #endif
 }
 

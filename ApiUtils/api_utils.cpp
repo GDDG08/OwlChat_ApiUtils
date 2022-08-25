@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-25 08:00:54
+ * @LastEditTime : 2022-08-25 10:54:55
  */
 #include "api_utils.h"
 
@@ -272,7 +272,10 @@ int ApiUtils::onSendFile(uint32_t _sessionID, uint8_t _sessionType, uint64_t _ti
     int msgID;
     bool ret = httpUtils->sendFileToServer(msgID, filePath.toStdString());
     qDebug() << "client send test return : " << ret << " with msgid : " << msgID << endl;
-    sendMessage(_sessionID, _sessionType, _time, MSG_TYPE::M_FILE, QString::number(msgID));
+    
+    
+    QStringList file = filePath.split("/");
+    sendMessage(_sessionID, _sessionType, _time, MSG_TYPE::M_FILE, QString::number(msgID) + "|" + file.last());
     return 0;
 }
 
@@ -381,7 +384,7 @@ void ApiUtils::resultHandle(QByteArray data) {
                 // memcpy(friend_list, &rtn->start_ptr, size);
                 Pak_UserBasicInfo* ptr = (Pak_UserBasicInfo*)&rtn->start_ptr;
                 for (int i = 0; i < rtn->list_len; i++) {
-                    D_UserBasicInfo info = {ptr->userID, ptr->avatarID, QString(ptr->nickName), ptr->userStatus};
+                    D_UserBasicInfo info = {ptr->userID, ptr->avatarID, QString(ptr->nickName), 1};
                     friend_list.append(info);
                     ptr++;
                 }
