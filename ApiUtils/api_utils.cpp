@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-25 04:07:35
+ * @LastEditTime : 2022-08-25 08:00:54
  */
 #include "api_utils.h"
 
@@ -55,14 +55,7 @@ int ApiUtils::sendMessage(uint32_t _sessionID, uint8_t _sessionType, uint64_t _t
     qDebug() << "ApiUtils::"
              << "sendMessage";
     uint32_t guid = getGUID("msg");
-    D_Message msg = {
-        this->login_ID,
-        _sessionID,
-        _sessionType,
-        _time,
-        0,
-        _msg_type,
-        _content};
+    D_Message msg = {this->login_ID, _sessionID, _sessionType, _time, 0, _msg_type, _content};
     // Todo
     // dataUtils->addMessage(msg, guid);
 
@@ -241,13 +234,45 @@ int ApiUtils::onGroupAdd(uint32_t _groupID, int64_t _userID) {
     socketUtils->sendData(*data);
     return 0;
 }
+
+int ApiUtils::getGroupList() {
+    qDebug() << "ApiUtils::"
+             << "getGroupList";
+    uint32_t guid = getGUID("getGroupList");
+
+    Pak_Basic* pak = new Pak_Basic(this->login_ID, PACKET_TYPE::GROUP_LIST);
+    pak->GUID = guid;
+    strcpy(pak->token, login_token);
+    QByteArray* data = new QByteArray((char*)pak, sizeof(*pak));
+
+    socketUtils->sendData(*data);
+    return 0;
+}
+
+int ApiUtils::getGroupInfo(uint32_t _groupID) {
+    qDebug() << "ApiUtils::"
+             << "getGroupInfo";
+    uint32_t guid = getGUID("getGroupInfo");
+
+    D_UserBasicInfo info;
+
+    Pak_FriendBasic* pak = new Pak_FriendBasic(this->login_ID, _groupID, PACKET_TYPE::GROUP_INFO);
+    pak->GUID = guid;
+    strcpy(pak->token, login_token);
+    QByteArray* data = new QByteArray((char*)pak, sizeof(*pak));
+
+    socketUtils->sendData(*data);
+    return 0;
+}
+
 #ifdef HTTP_ENABLE
-int ApiUtils::onSendFile(QString filePath) {
+int ApiUtils::onSendFile(uint32_t _sessionID, uint8_t _sessionType, uint64_t _time, QString filePath) {
     qDebug() << "ApiUtils::"
              << "onSendFile";
     int msgID;
     bool ret = httpUtils->sendFileToServer(msgID, filePath.toStdString());
     qDebug() << "client send test return : " << ret << " with msgid : " << msgID << endl;
+    sendMessage(_sessionID, _sessionType, _time, MSG_TYPE::M_FILE, QString::number(msgID));
     return 0;
 }
 
@@ -262,7 +287,35 @@ int ApiUtils::onDownFile(int _msgID, QString _filePath) {
 }
 #endif
 
-uint32_t ApiUtils::getGUID(QString tag) {
+int ApiUtils::requestMessage(uint32_t _userID) {
+    qDebug() << "ApiUtils::"
+             << "requestMessage";
+    uint32_t guid = getGUID("requestMessage");
+
+    Pak_Basic* pak = new Pak_Basic(this->login_ID, PACKET_TYPE::REQUEST_MSG);
+    pak->GUID = guid;
+    strcpy(pak->token, login_token);
+    QByteArray* data = new QByteArray((char*)pak, sizeof(*pak));
+
+    socketUtils->sendData(*data);
+    return 0;
+}
+// int ApiUtils::onUserInfoEdit(uint32_t _id, QString _nickname, uint8_t _gender, uint8_t _age, uint8_t _city, uint8_t _job, uint32_t avatar, QString signature, uint8_t status) {
+//     qDebug() << "ApiUtils::"
+//              << "onRegister";
+//     uint32_t guid = getGUID("register");
+
+//     QString _pwd_md5 = QCryptographicHash::hash(_pwd.toLatin1(), QCryptographicHash::Md5).toHex().right(16);
+//     Pak_Register* pak = new Pak_Register(_id, _pwd_md5.toLocal8Bit().data(), _nickname.toLocal8Bit().data(), _gender, _age, _city, _job);
+//     pak->GUID = guid;
+//     QByteArray* data = new QByteArray((char*)pak, sizeof(*pak));
+
+//     socketUtils->sendData(*data);
+//     return 0;
+// }
+
+uint32_t
+ApiUtils::getGUID(QString tag) {
     return abs(rand());
 }
 
@@ -294,7 +347,7 @@ void ApiUtils::resultHandle(QByteArray data) {
             qDebug() << "SEND_MESSAGE-->"
                      << "msg:" << pak->msg << ", msgID:" << rtn->msgID;
 
-            dataUtils->setMessageID(rtn->GUID, rtn->msgID);
+            // dataUtils->setMessageID(rtn->GUID, rtn->msgID);
 
             emit sendMessageCallback(pak->msg, rtn->msgID);
         } break;
@@ -309,7 +362,7 @@ void ApiUtils::resultHandle(QByteArray data) {
 
             D_Message msg = {rtn->userID, rtn->sessionID, rtn->sessionType, rtn->time, rtn->msgID, rtn->msg_type, content};
             // Todo
-            dataUtils->addMessage(msg);
+            // dataUtils->addMessage(msg);
 
             emit recvMessageCallback(rtn->userID, rtn->sessionID, rtn->time, rtn->msgID, rtn->msg_type, content);
             onRecvMessage(rtn->msgID);
@@ -330,6 +383,7 @@ void ApiUtils::resultHandle(QByteArray data) {
                 for (int i = 0; i < rtn->list_len; i++) {
                     D_UserBasicInfo info = {ptr->userID, ptr->avatarID, QString(ptr->nickName), ptr->userStatus};
                     friend_list.append(info);
+                    ptr++;
                 }
                 qDebug() << "FRIEND_LIST-->"
                          << "friendNum:" << rtn->list_len << "frist Friend:" << friend_list.at(0).userID;
@@ -432,6 +486,50 @@ void ApiUtils::resultHandle(QByteArray data) {
             qDebug() << "GROUP_ADD-->"
                      << "msg:" << pak->msg;
             emit onGroupAddCallback(pak->msg);
+        } break;
+
+        case PACKET_TYPE::GROUP_LIST: {
+            Pak_BasicArrayRTN* rtn = (Pak_BasicArrayRTN*)data.data();
+            QList<D_GroupBasicInfo> group_list;
+            if (rtn->list_len == 0) {
+                qDebug() << "GROUP_LIST-->"
+                         << "no group";
+                emit getGroupListCallback(group_list);
+            } else {
+                // int size = sizeof(D_UserBasicInfo) * rtn->list_len;
+                // D_UserBasicInfo* friend_list = (D_UserBasicInfo*)malloc(size);
+                // memcpy(friend_list, &rtn->start_ptr, size);
+                Pak_GroupBasicInfo* ptr = (Pak_GroupBasicInfo*)&rtn->start_ptr;
+                for (int i = 0; i < rtn->list_len; i++) {
+                    D_GroupBasicInfo info = {ptr->groupID, QString(ptr->nickName), ptr->avatarID};
+                    group_list.append(info);
+                    ptr++;
+                }
+                qDebug() << "GROUP_LIST-->"
+                         << "groupNum:" << rtn->list_len << "frist Group:" << group_list.at(0).groupID;
+
+                // Todo
+                //  dataUtils->updateGroupList(group_list);
+
+                emit getGroupListCallback(group_list);
+            }
+        } break;
+        case PACKET_TYPE::GROUP_INFO: {
+            Pak_FriendBasicInfoRTN* rtn = (Pak_FriendBasicInfoRTN*)data.data();
+            if (rtn->msg == TASK_STATUS::SUCCESS) {
+                D_GroupBasicInfo info = {rtn->userID, QString(rtn->nickName), rtn->avatarID};
+                qDebug() << "GROUP_INFO-->"
+                         << "msg:" << TASK_STATUS_MSG[rtn->msg] << ", usegroupIDrID:" << info.groupID << ", nickname:" << QString(info.nickName) << ", avatarID:" << info.avatarID;
+
+                // Todo
+                //  dataUtils->updateUserInfo(info);
+
+                emit getGroupInfoCallback(info);
+            } else {
+                qDebug() << "GROUP_INFO-->"
+                         << "error: " << TASK_STATUS_MSG[rtn->msg];
+                //  emit getUserInfoCallback(NULL);
+            }
         } break;
     }
 }

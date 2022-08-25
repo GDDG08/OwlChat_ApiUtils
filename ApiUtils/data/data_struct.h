@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-23 20:25:52
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-25 02:51:58
+ * @LastEditTime : 2022-08-25 05:18:13
  */
 #ifndef DATA_STRUCT_H
 #define DATA_STRUCT_H
@@ -21,11 +21,24 @@ struct D_UserBasicInfo {
     QString nickName;
     uint8_t userStatus;
 };
+
 struct Pak_UserBasicInfo {
     uint32_t userID;
     uint32_t avatarID;
     char nickName[128];
     uint8_t userStatus;
+};
+
+struct D_GroupBasicInfo {
+    uint32_t groupID;
+    QString nickName;
+    uint32_t avatarID;
+};
+
+struct Pak_GroupBasicInfo {
+    uint32_t groupID;
+    char nickName[128];
+    uint32_t avatarID;
 };
 
 struct D_UserDetailInfo {
