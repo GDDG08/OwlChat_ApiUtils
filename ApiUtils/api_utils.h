@@ -1,11 +1,11 @@
 /*
  * @Project      :
- * @FilePath     : \IM-Network\ApiUtils\api_utils.h
+ * @FilePath     : \IM-Network2\ApiUtils\api_utils.h
  * @Descripttion :
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-25 07:44:16
+ * @LastEditTime : 2022-08-25 21:35:42
  */
 #ifndef API_UTILS_H
 #define API_UTILS_H
@@ -67,6 +67,7 @@ class ApiUtils : public QObject {
     explicit ApiUtils(QObject* parent = 0);
 
     uint32_t login_ID = 0, login_ID_trial = 0;
+    
     // IMPORTANT: API action, call it when you need
     int onLogin(uint32_t, QString);
     int onRegister(uint32_t _id, QString _pwd, QString _nickname, uint8_t _gender, uint8_t _age, uint8_t _city, uint8_t _job);

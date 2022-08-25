@@ -1,37 +1,17 @@
 /*
  * @Project      :
- * @FilePath     : \IM-Network\ApiUtils\data\data_storage.cpp
+ * @FilePath     : \IM-Network2\ApiUtils\data\data_storage.cpp
  * @Descripttion :
  * @Author       : GDDG08
  * @Date         : 2022-08-22 20:15:38
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-25 01:45:31
+ * @LastEditTime : 2022-08-25 15:06:14
  */
 #include "data_storage.h"
 
 DataStorage::DataStorage(QObject* parent)
     : QObject(parent) {
     qDebug() << QSqlDatabase::drivers();
-
-    // Todo Remove
-    // connectDb(222, "123456");
-    // openDb();
-    // createTable();
-    // QSqlQuery query;
-    // query.exec("select * from test");
-
-    // while (query.next()) {
-    //     QString userID = query.value("username").toString();
-    //     qDebug() << userID;
-    // }
-
-    // struct UserInfo{
-    //     int char
-    // }
-    // QList<UserInfo>
-    // DataResult r;
-    // select(r, "select * from user", 10);
-    // qDebug() << "select";
 }
 
 DataStorage::~DataStorage() {

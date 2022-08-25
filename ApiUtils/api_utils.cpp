@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-25 12:57:47
+ * @LastEditTime : 2022-08-25 21:39:42
  */
 #include "api_utils.h"
 
@@ -104,6 +104,7 @@ int ApiUtils::getUserInfo(uint32_t _userID) {
              << "getUserInfo";
     uint32_t guid = getGUID("getUserInfo");
 
+    // Local database pref
     D_UserBasicInfo info;
     if (dataUtils->getUserInfo(_userID, info) == 0) {
         emit getUserInfoCallback(info);
@@ -421,7 +422,7 @@ void ApiUtils::resultHandle(QByteArray data) {
                          << "msg:" << TASK_STATUS_MSG[rtn->msg] << ", userID:" << info.userID;
 
                 // Todo
-                dataUtils->updateUserDetail(info);
+                // dataUtils->updateUserDetail(info);
 
                 emit getUserDetailCallback(info);
             } else {
@@ -500,9 +501,6 @@ void ApiUtils::resultHandle(QByteArray data) {
                          << "no group";
                 emit getGroupListCallback(group_list);
             } else {
-                // int size = sizeof(D_UserBasicInfo) * rtn->list_len;
-                // D_UserBasicInfo* friend_list = (D_UserBasicInfo*)malloc(size);
-                // memcpy(friend_list, &rtn->start_ptr, size);
                 Pak_GroupBasicInfo* ptr = (Pak_GroupBasicInfo*)&rtn->start_ptr;
                 for (int i = 0; i < rtn->list_len; i++) {
                     D_GroupBasicInfo info = {ptr->groupID, QString(ptr->nickName), ptr->avatarID};
@@ -512,7 +510,7 @@ void ApiUtils::resultHandle(QByteArray data) {
                 qDebug() << "GROUP_LIST-->"
                          << "groupNum:" << rtn->list_len << "frist Group:" << group_list.at(0).groupID;
 
-                // Todo
+                // Update Database
                 dataUtils->updateGroupList(group_list);
 
                 emit getGroupListCallback(group_list);

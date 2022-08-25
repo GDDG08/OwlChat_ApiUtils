@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:50:46
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-25 13:05:22
+ * @LastEditTime : 2022-08-25 13:10:38
  */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -62,7 +62,7 @@ void MainWindow::on_pushButton_3_clicked() {
     api->sendMessage(222222, 0, 12344, 0, "abc123!@#");
 
 #else
-    api->sendMessage(111111, 0, 12344, 0, "abc123!@#");
+    api->sendMessage(123123, 0, 12344, 0, "abc123!@#");
 #endif
 }
 void MainWindow::on_pushButton_4_clicked() {
@@ -73,7 +73,7 @@ void MainWindow::on_pushButton_5_clicked() {
     api->onFriendAdd(222222, "love from China");
     // api->onFriendAdd(222222, "love from China");
 #else
-    api->onFriendAdd(111111, "love from America");
+    api->onFriendAdd(123123, "love from America");
 #endif
 }
 
@@ -81,7 +81,7 @@ void MainWindow::on_pushButton_6_clicked() {
 #ifdef USER_1
     api->onFriendDelete(222222);
 #else
-    api->onFriendDelete(111111);
+    api->onFriendDelete(123123);
 #endif
 }
 
@@ -89,7 +89,7 @@ void MainWindow::on_pushButton_7_clicked() {
 #ifdef USER_1
     api->onFriendAccept(222222, true);
 #else
-    api->onFriendAccept(111111, true);
+    api->onFriendAccept(123123, true);
 #endif
 }
 
@@ -184,7 +184,7 @@ void MainWindow::on_pushButton_11_clicked() {
 }
 
 void MainWindow::on_pushButton_10_clicked() {
-    api->onGroupAdd(10);
+    api->onGroupAdd(20,123123);
     // #ifdef USER_1
     //     api->onGroupAdd(1);
     // #else
@@ -195,7 +195,7 @@ void MainWindow::on_pushButton_10_clicked() {
 void MainWindow::on_pushButton_12_clicked() {
 #ifdef HTTP_ENABLE
     // api->onSendFile("C:/IM/mainwindow.h");
-    api->onSendFile(111111, SESSION_TYPE::S_FRIEND, 0, "C:/IM/test.jpg");
+    api->onSendFile(123123, SESSION_TYPE::S_FRIEND, 0, "C:/IM/test.jpg");
     // api->onSendFile("D:/Download/Video/观看 Top Gun- Maverick 完整电影在线免费.mp4");
 #endif
 }
@@ -207,7 +207,7 @@ void MainWindow::on_pushButton_13_clicked() {
 }
 
 void MainWindow::on_pushButton_14_clicked() {
-    api->getGroupInfo(1);
+    api->getGroupInfo(20);
 }
 
 void MainWindow::on_pushButton_15_clicked() {
@@ -215,5 +215,5 @@ void MainWindow::on_pushButton_15_clicked() {
 }
 
 void MainWindow::on_pushButton_19_clicked() {
-    api->sendMessage(10, SESSION_TYPE::S_GROUP, 0, MSG_TYPE::M_TEXT, "HELLO!!!");
+    api->sendMessage(20, SESSION_TYPE::S_GROUP, 0, MSG_TYPE::M_TEXT, "HELLO!!!");
 }
