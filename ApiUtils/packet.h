@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:52:10
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-24 16:01:19
+ * @LastEditTime : 2022-08-25 07:12:13
  */
 #ifndef PACKAGE_H
 #define PACKAGE_H
@@ -32,9 +32,16 @@ enum PACKET_TYPE {
     USER_INFO,
     USER_DETAIL,
     GROUP_CREATE,
-    GROUP_ADD
-
+    GROUP_ADD,
+    GROUP_USER_LIST,
+    USER_PROFILE,
+    USER_PWD,
+    USER_SEARCH,
+    GROUP_INFO,
+    GROUP_LIST,
+    REQUEST_MSG
 };
+
 class Packet {
    public:
     uint8_t PACKET_HEADR_0 = SOCKET_PACKET_HEADR_0;
@@ -199,7 +206,42 @@ class Pak_GroupAdd : public Pak_Basic {
    public:
     uint32_t clientID;
     uint32_t groupID;
-    Pak_GroupAdd(uint32_t _userID,uint32_t _clientID, uint32_t _groupID);
+    Pak_GroupAdd(uint32_t _userID, uint32_t _clientID, uint32_t _groupID);
+};
+
+// // 15. GROUP_LIST
+// struct GroupListItem {
+//     uint32_t userid;
+//     char nickname[128];
+//     uint32_t avatar;
+// };
+
+// struct GroupListBodyPack {
+//     uint32_t userid;
+//     uint32_t groupid;
+// };
+
+// 16. USER_INFO_MODIFY
+class UserInfoModifyBodyPack : public Pak_Basic {
+    char nickname[128];
+    uint8_t gender;
+    uint8_t age;
+    uint8_t city;
+    uint8_t job;
+    uint32_t avatar;
+    char signature[256];
+    uint8_t user_status;
+};
+
+// 17. USER_PWD_MODIFY
+class UserPwdModifyBodyPack : public Packet {
+    char password_old[17];
+    char password_new[17];
+};
+
+// 18. SEARCH_USER
+class SearchUserBodyPack : public Pak_Basic {
+    uint32_t query_id;
 };
 
 #endif  // PACKAGE_H
