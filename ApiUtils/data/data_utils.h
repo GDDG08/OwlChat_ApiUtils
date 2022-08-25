@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-23 18:20:00
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-25 10:28:19
+ * @LastEditTime : 2022-08-25 13:00:09
  */
 #ifndef DATA_UTILS_H
 #define DATA_UTILS_H
@@ -40,7 +40,7 @@ class DataUtils : public QObject {
     int getFriendList(QList<D_UserBasicInfo>& list);
     int updateGroupList(QList<D_GroupBasicInfo> list);
     int getGroupList(QList<D_GroupInfo>& list);
-    int updateGroupInfo(D_GroupInfo info);
+    int updateGroupInfo(D_GroupBasicInfo info);
     int getGroupInfo(uint32_t groupID, D_GroupInfo& info);
     int addGroup(uint32_t groupID);
     int deleteGroup(uint32_t groupID);

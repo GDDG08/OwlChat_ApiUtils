@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-23 18:20:00
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-25 10:31:37
+ * @LastEditTime : 2022-08-25 12:59:58
  */
 #include "data_utils.h"
 
@@ -35,7 +35,7 @@ int DataUtils::addMessage(D_Message msg, QString content, int GUID) {
     // sprintf(sql, "INSERT INTO msg(msgid, fromuserid, sessionid, sessiontype, msgtype, content, guid)")
     QString sql = QString(
                       "INSERT INTO msg(msgid, fromuserid, sessionid, sessiontype, msgtype, content, guid)"
-                      "VALUES(%1, '%2', '%3', %4, %5, %6, %7)")
+                      "VALUES(%1, '%2', '%3', %4, %5, '%6', %7)")
                       .arg(QString::number(msg.msgID), QString::number(msg.fromID), QString::number(msg.sessionType == 0 ? msg.fromID : msg.sessionID), QString::number(msg.sessionType), QString::number(msg.msg_type), content, QString::number(GUID));
     return dataStorage->execute(sql);
 }
@@ -326,12 +326,12 @@ int DataUtils::updateGroupList(QList<D_GroupBasicInfo> list) {
             if (res.size() == 0) {  // no then insert    -
                 char sql1[1024] = {0};
                 sprintf(sql1, "insert into gp(groupid, groupname, avatar) values(%d, '%s', %d )",
-                        basicinfo.groupID, basicinfo.nickName.toLocal8Bit().data(), basicinfo.adminUser, basicinfo.avatarID, basicinfo.board.toLocal8Bit().data());
+                        basicinfo.groupID, basicinfo.nickName.toLocal8Bit().data(), basicinfo.avatarID);
                 return dataStorage->execute(sql1);
             } else {  // have then update
                 char sql1[1024] = {0};
                 sprintf(sql1, "update gp set groupname = '%s',  avatar = %d where groupid = %d",
-                        basicinfo.groupName.toLocal8Bit().data(), basicinfo.avatarID, basicinfo.groupID);
+                        basicinfo.nickName.toLocal8Bit().data(), basicinfo.avatarID, basicinfo.groupID);
                 return dataStorage->execute(sql1);
             }
         } else {
@@ -362,7 +362,7 @@ int DataUtils::getGroupList(QList<D_GroupInfo>& list) {
         return 1;
 }
 
-int DataUtils::updateGroupInfo(D_GroupInfo info) {
+int DataUtils::updateGroupInfo(D_GroupBasicInfo info) {
     qDebug() << "DataUtils"
              << "updateGroupInfo";
     QString sql = QString("select groupid from gp where groupid = %1").arg(QString::number(info.groupID));
@@ -370,13 +370,13 @@ int DataUtils::updateGroupInfo(D_GroupInfo info) {
     if (dataStorage->select(res, sql, 1) == 0) {
         if (res.size() == 0) {  // no then insert
             char sql1[1024] = {0};
-            sprintf(sql1, "insert into gp(groupid, groupname, createuser ,avatar, board) values(%d, '%s', '%d', %d, '%s')",
-                    info.groupID, info.groupName.toLocal8Bit().data(), info.adminUser, info.avatarID, info.board.toLocal8Bit().data());
+            sprintf(sql1, "insert into gp(groupid, groupname, avatar) values(%d, '%s', %d )",
+                    info.groupID, info.nickName.toLocal8Bit().data(), info.avatarID);
             return dataStorage->execute(QString(sql1));
         } else {  // have then update
             char sql1[1024] = {0};
-            sprintf(sql1, "update gp set groupname = '%s', createuser = '%d', avatar = %d, board = '%s' where groupid = %d",
-                    info.groupName.toLocal8Bit().data(), info.adminUser, info.avatarID, info.board.toLocal8Bit().data(), info.groupID);
+            sprintf(sql1, "update gp set groupname = '%s',  avatar = %d where groupid = %d",
+                    info.nickName.toLocal8Bit().data(), info.avatarID, info.groupID);
             return dataStorage->execute(QString(sql1));
         }
     } else {

@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 11:48:48
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-25 10:51:58
+ * @LastEditTime : 2022-08-25 12:57:47
  */
 #include "api_utils.h"
 
@@ -391,7 +391,7 @@ void ApiUtils::resultHandle(QByteArray data) {
                          << "friendNum:" << rtn->list_len << "frist Friend:" << friend_list.at(0).userID;
 
                 // Todo
-                //  dataUtils->updateFriendList(friend_list);
+                dataUtils->updateFriendList(friend_list);
 
                 emit getFriendListCallback(friend_list);
             }
@@ -482,6 +482,8 @@ void ApiUtils::resultHandle(QByteArray data) {
 
             qDebug() << "GROUP_CREATE-->"
                      << "msg:" << pak->msg << "groupID:" << rtn->groupID;
+            dataUtils->addGroup(rtn->groupID);
+            getGroupInfo(rtn->groupID);
             emit onGroupCreateCallback(pak->msg, rtn->groupID);
         } break;
         case PACKET_TYPE::GROUP_ADD: {
@@ -524,7 +526,7 @@ void ApiUtils::resultHandle(QByteArray data) {
                          << "msg:" << TASK_STATUS_MSG[rtn->msg] << ", usegroupIDrID:" << info.groupID << ", nickname:" << QString(info.nickName) << ", avatarID:" << info.avatarID;
 
                 // Todo
-                //  dataUtils->updateUserInfo(info);
+                dataUtils->updateGroupInfo(info);
 
                 emit getGroupInfoCallback(info);
             } else {
