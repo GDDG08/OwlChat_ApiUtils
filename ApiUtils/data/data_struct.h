@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-23 20:25:52
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-25 05:18:13
+ * @LastEditTime : 2022-08-25 11:48:48
  */
 #ifndef DATA_STRUCT_H
 #define DATA_STRUCT_H
@@ -24,9 +24,8 @@ struct D_UserBasicInfo {
 
 struct Pak_UserBasicInfo {
     uint32_t userID;
-    uint32_t avatarID;
     char nickName[128];
-    uint8_t userStatus;
+    uint32_t avatarID;
 };
 
 struct D_GroupBasicInfo {

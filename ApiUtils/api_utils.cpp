@@ -383,7 +383,7 @@ void ApiUtils::resultHandle(QByteArray data) {
                 // memcpy(friend_list, &rtn->start_ptr, size);
                 Pak_UserBasicInfo* ptr = (Pak_UserBasicInfo*)&rtn->start_ptr;
                 for (int i = 0; i < rtn->list_len; i++) {
-                    D_UserBasicInfo info = {ptr->userID, ptr->avatarID, QString(ptr->nickName), ptr->userStatus};
+                    D_UserBasicInfo info = {ptr->userID, ptr->avatarID, QString(ptr->nickName), 1};
                     friend_list.append(info);
                     ptr++;
                 }
