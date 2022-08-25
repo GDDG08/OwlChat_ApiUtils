@@ -5,7 +5,7 @@
  * @Author       : GDDG08
  * @Date         : 2022-08-20 10:50:46
  * @LastEditors  : GDDG08
- * @LastEditTime : 2022-08-25 11:19:36
+ * @LastEditTime : 2022-08-25 12:06:41
  */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -184,11 +184,12 @@ void MainWindow::on_pushButton_11_clicked() {
 }
 
 void MainWindow::on_pushButton_10_clicked() {
-#ifdef USER_1
-    api->onGroupAdd(1);
-#else
-    api->onGroupAdd(1, 111111);
-#endif
+    api->onGroupAdd(10);
+    // #ifdef USER_1
+    //     api->onGroupAdd(1);
+    // #else
+    //     api->onGroupAdd(1, 111111);
+    // #endif
 }
 
 void MainWindow::on_pushButton_12_clicked() {
@@ -214,5 +215,5 @@ void MainWindow::on_pushButton_15_clicked() {
 }
 
 void MainWindow::on_pushButton_19_clicked() {
-    api->sendMessage(1, SESSION_TYPE::S_GROUP, 0, MSG_TYPE::M_TEXT, "HELLO!!!");
+    api->sendMessage(10, SESSION_TYPE::S_GROUP, 0, MSG_TYPE::M_TEXT, "HELLO!!!");
 }
