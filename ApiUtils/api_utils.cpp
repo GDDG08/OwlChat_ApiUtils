@@ -309,7 +309,7 @@ void ApiUtils::resultHandle(QByteArray data) {
 
             D_Message msg = {rtn->userID, rtn->sessionID, rtn->sessionType, rtn->time, rtn->msgID, rtn->msg_type, content};
             // Todo
-            dataUtils->addMessage(msg);
+            dataUtils->addMessage(msg, content);
 
             emit recvMessageCallback(rtn->userID, rtn->sessionID, rtn->time, rtn->msgID, rtn->msg_type, content);
             onRecvMessage(rtn->msgID);
