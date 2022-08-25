@@ -23,7 +23,7 @@ class DataUtils : public QObject {
 
     // init database
     int onLogin(uint32_t userID, QString pwd);
-    int addMessage(D_Message msg, int GUID = -1);
+    int addMessage(D_Message msg, QString content, int GUID = -1);
     int setMessageID(uint32_t GUID, uint32_t msgID);
     int getMessages(uint32_t sessionID, uint8_t sessionType, QList<D_Message>& list);
     int getRecentMessageList(QList<D_RecentMsgListItem>& list);

@@ -29,22 +29,20 @@ int DataUtils::onLogin(uint32_t userID, QString pwd) {
     dataStorage->createTable();
 }
 
-int DataUtils::addMessage(D_Message msg, int GUID) {
+
+// ==============================debug OK
+int DataUtils::addMessage(D_Message msg, QString content, int GUID) {
     qDebug() << "DataUtils"
              << "addMessage";
     
-
-    std::string s = "INSERT INTO msg(msgid, fromuserid, sessionid, sessiontype, msgtype, content, guid) VALUES(";
-    QString test = msg.content;
-    std::string a = "1234";
-    s += std::to_string(msg.msgID) + ",'" + std::to_string(msg.fromID) + "','" + std::to_string(msg.sessionType == 0 ? msg.fromID : msg.sessionID) + "'," + std::to_string(msg.msg_type) + ",'" + a + "'," + std::to_string(GUID) + ")";
-
-    // char sql[1024];
-    // sprintf(sql, "INSERT INTO msg(msgid, fromuserid, sessionid, sessiontype, msgtype, content, guid) VALUES(%ld, '%ld', '%d', %d, %d, '%s', %d)",
-    //         msg.msgID, msg.fromID, msg.sessionType == 0 ? msg.fromID : msg.sessionID, msg.sessionType, msg.msg_type, msg.content.toStdString(), GUID);
-
-    return dataStorage->execute(QString::fromStdString(s));
+    // sprintf(sql, "INSERT INTO msg(msgid, fromuserid, sessionid, sessiontype, msgtype, content, guid)")
+    QString sql = QString(
+                      "INSERT INTO msg(msgid, fromuserid, sessionid, sessiontype, msgtype, content, guid)"
+                      "VALUES(%1, '%2', '%3', %4, %5, %6, %7)")
+                      .arg(QString::number(msg.msgID), QString::number(msg.fromID), QString::number(msg.sessionType == 0 ? msg.fromID : msg.sessionID), QString::number(msg.sessionType), QString::number(msg.msg_type), content, QString::number(GUID));
+    return dataStorage->execute(sql);
 }
+
 
 int DataUtils::setMessageID(uint32_t GUID, uint32_t msgID) {
     qDebug() << "DataUtils"
